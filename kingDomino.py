@@ -30,18 +30,32 @@ def crownDetection(image):
     cv2.destroyAllWindows()
 
 
+
 def segmentImage(image):
     height, width, channels = image.shape
     squareHeight = int(height / 5)
     squareWidth = int(width / 5)
     
-    for ySq in range(5):
-        for xSq in range(5):
-            square = image[squareHeight * ySq:squareHeight * (ySq+1), squareWidth * xSq:squareWidth * (xSq+1)]
-            cv2.imshow(f"{xSq} x {ySq}", square)
+    #Create list which will be used to store the slices
+    sliceList = []
     
+    #For loop iterates through the squares of the image
+    for ySq in range(5):
+        
+        #sliceList.append([])
+        
+        for xSq in range(5):
+            #Compute the slice
+            square = image[squareHeight * ySq:squareHeight * (ySq+1), squareWidth * xSq:squareWidth * (xSq+1)]
+            
+            #Append the slice to its location in sliceList 
+            sliceList[ySq,xSq] = square
+    
+    cv2.imshow("window", sliceList[1,1])
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+    
+    return sliceList
             
 
 class Tile:
@@ -60,9 +74,11 @@ img12Gray = cv2.cvtColor(img12copy, cv2.COLOR_BGR2GRAY)
 img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/4.jpg")
 img4copy = np.copy(img4)
 
-segmentImage(img12copy)
+img12List = segmentImage(img12copy)
+cv2.imshow("window", img12List[2,2])
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 
-#crownDetection(img12copy)
 
 '''
 img12HSV = cv2.cvtColor(img12copy, cv2.COLOR_BGR2HSV)
