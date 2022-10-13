@@ -42,25 +42,22 @@ def segmentImage(image):
     #For loop iterates through the squares of the image
     for ySq in range(5):
         
-        #sliceList.append([])
+        sliceList.append([])
         
         for xSq in range(5):
             #Compute the slice
             square = image[squareHeight * ySq:squareHeight * (ySq+1), squareWidth * xSq:squareWidth * (xSq+1)]
             
             #Append the slice to its location in sliceList 
-            sliceList[ySq,xSq] = square
-    
-    cv2.imshow("window", sliceList[1,1])
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+            sliceList[ySq].append(square)
     
     return sliceList
             
 
 class Tile:
-    def __init__(self, position, biome, crowns):
-        self.position = position
+    def __init__(self, xPos, yPos, biome, crowns):
+        self.xPos = xPos
+        self.yPos = yPos
         self.biome = biome
         self.crowns = crowns
 
@@ -75,7 +72,7 @@ img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/
 img4copy = np.copy(img4)
 
 img12List = segmentImage(img12copy)
-cv2.imshow("window", img12List[2,2])
+cv2.imshow("window", img12List[2][2])
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
