@@ -1,11 +1,14 @@
+import random
 import cv2
 import numpy as np
+
+from kingDominoFunctions import segmentImage
 
 #Andreas version
 #Count king domino
 
 
-############### FUNCTIONS #################
+############################################### FUNCTIONS ###############################################
 def edgeDetection(image):
     #imageGray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     imageBlur = cv2.GaussianBlur(image, (5,5), 2)
@@ -30,39 +33,62 @@ def crownDetection(image):
     cv2.destroyAllWindows()
 
 
+#Compute biome of tile
+def determineBiome():
+    #print("Determining biome...")
+    return random.choice(["Plains", "Forest", "Swamp", "Ocean", "Wheat", "Mine"])
+    
 
-def segmentImage(image):
-    height, width, channels = image.shape
-    squareHeight = int(height / 5)
-    squareWidth = int(width / 5)
-    
-    #Create list which will be used to store the slices
-    sliceList = []
-    
-    #For loop iterates through the squares of the image
-    for ySq in range(5):
-        
-        sliceList.append([])
-        
-        for xSq in range(5):
-            #Compute the slice
-            square = image[squareHeight * ySq:squareHeight * (ySq+1), squareWidth * xSq:squareWidth * (xSq+1)]
-            
-            #Append the slice to its location in sliceList 
-            sliceList[ySq].append(square)
-    
-    return sliceList
+#Compute amount of crowns on tile
+def computeCrowns():
+    #print("Computing crowns...")
+    return random.randrange(0,3,1)
+
+
             
 
-class Tile:
-    def __init__(self, xPos, yPos, biome, crowns):
-        self.xPos = xPos
-        self.yPos = yPos
-        self.biome = biome
-        self.crowns = crowns
+class kingdom:
+    def __init__(self, image):
+        self.list = segmentImage(image)
+        #self.tile = dominoTile(self.list)
+        for tileY in range(5):
+            for tileX in range(5):
+                #setattr(self, f"tile{tileY}x{tileX}", dominoTile(self.list[tileY][tileX]))
+                setattr(self, f"tile{tileY}x{tileX}", dominoTile(self.list[tileY][tileX]))
+                #self.f"tile{tileY}x{tileX}" = dominoTile(self.list[tileY][tileX])
+    
+    #for tileY in range(5):
+    #    for tileX in range(5):
+            #self.globals()[]
+    #        pass
+    
+    def tile(self, yPos, xPos):
+        dominoTile(self.list[yPos][xPos])
+    
+    
+    def getPoints(self):
+        #Calculate points
+        pass
+    
+
+    
+class dominoTile:
+    def __init__(self, tile):
+        self.tile = tile
+        self.biome = determineBiome()
+        self.crowns = computeCrowns()
+    
+    def __str__(self):
+        return f"Biome: {self.biome} (Crowns: {self.crowns})"
+    
+    def showTile(self):
+        cv2.imshow("Window", self.tile)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+    
 
 
-############### MAIN CODE ################
+############################################### MAIN CODE ###############################################
 
 img12 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/12.jpg")
 img12copy = np.copy(img12)
@@ -71,10 +97,31 @@ img12Gray = cv2.cvtColor(img12copy, cv2.COLOR_BGR2GRAY)
 img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/4.jpg")
 img4copy = np.copy(img4)
 
+'''
+for i in range(5):
+    globals()[f"n{i}"] = i
+'''
+
+
+img12Kingdom = kingdom(img12copy)
+#print(img12Kingdom.tile0x0)
+img12Kingdom.tile0x0
+
+'''
 img12List = segmentImage(img12copy)
-cv2.imshow("window", img12List[2][2])
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+tileClassTest = dominoTile(img12List[2][2])
+print(tileClassTest)
+tileClassTest.showTile()
+#cv2.imshow("window2", img12List[2][2])
+'''
+
+#kingdom12 = kingdom(img12copy)
+#kingdom12.tile(2,2)
+#kingdom12.showTile
+#cv2.imshow("Window", kingdom12.list[4][2])
+
+#cv2.waitKey(0)
+#cv2.destroyAllWindows()
 
 
 '''
@@ -102,14 +149,10 @@ cv2.waitKey(0)
 edgeDetection(water)
 '''
 
-'''
-img12HistEq = cv2.equalizeHist(img12Gray)
-cv2.imshow("Hist EQ", img12HistEq)
-cv2.waitKey()
-#cv2.destroyAllWindows()
 
-edgeDetection(img12HistEq)
+
+
 
 #img12gray2 = cv2.cvtColor(img12HSV, cv2.COLOR_HSV2)
-'''
+
 

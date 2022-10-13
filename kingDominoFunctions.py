@@ -23,3 +23,34 @@ def crownDetection(image):
     cv2.imshow("Image crown thresh", imageCrownThresh)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+
+def equalizeHistogram(image):
+    #Needs grayscale image
+    imageHistEq = cv2.equalizeHist(image)
+    cv2.imshow("Hist EQ", imageHistEq)
+    cv2.waitKey()
+    cv2.destroyAllWindows()
+
+
+def segmentImage(image):
+    height, width, channels = image.shape
+    squareHeight = int(height / 5)
+    squareWidth = int(width / 5)
+    
+    #Create list which will be used to store the slices
+    sliceList = []
+    
+    #For loop iterates through the squares of the image
+    for ySq in range(5):
+        
+        sliceList.append([])
+        
+        for xSq in range(5):
+            #Compute the slice
+            square = image[squareHeight * ySq:squareHeight * (ySq+1), squareWidth * xSq:squareWidth * (xSq+1)]
+            
+            #Append the slice to its location in sliceList 
+            sliceList[ySq].append(square)
+    
+    return sliceList
