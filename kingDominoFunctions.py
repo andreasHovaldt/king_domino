@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import random
 
 def edgeDetection(image):
     imageGray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
