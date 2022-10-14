@@ -6,11 +6,9 @@ def edgeDetection(image):
     imageBlur = cv2.GaussianBlur(imageGray, (5,5), 2)
     imageCannyEdge = cv2.Canny(imageBlur, 50, 150)
     
-    cv2.imshow("Image Gray", imageGray)
-    cv2.imshow("Image Blur", imageBlur)
-    cv2.imshow("Image Canny", imageCannyEdge)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    #cv2.imshow("Image Gray", imageGray)
+    #cv2.imshow("Image Blur", imageBlur)
+    return imageCannyEdge
 
 
 def crownDetection(image):
@@ -26,11 +24,15 @@ def crownDetection(image):
 
 
 def equalizeHistogram(image):
-    #Needs grayscale image
-    imageHistEq = cv2.equalizeHist(image)
-    cv2.imshow("Hist EQ", imageHistEq)
-    cv2.waitKey()
-    cv2.destroyAllWindows()
+    imageOutput = np.copy(image)
+    if (len(image.shape) < 3):
+        imageOutput = cv2.equalizeHist(imageOutput)
+    
+    elif (len(image.shape) == 3):
+        for c in range(image.shape[2]):
+            imageOutput[:,:,c] = cv2.equalizeHist(imageOutput[:,:,c])
+    
+    return imageOutput
 
 
 def segmentImage(image):
@@ -54,3 +56,16 @@ def segmentImage(image):
             sliceList[ySq].append(square)
     
     return sliceList
+
+
+#Compute biome of tile
+def determineBiome(tile):
+    tileThing = tile
+    #print("Determining biome...")
+    return random.choice(["Plains", "Forest", "Swamp", "Ocean", "Wheat", "Mine"])
+    
+
+#Compute amount of crowns on tile
+def computeCrowns():
+    #print("Computing crowns...")
+    return random.randrange(0,3,1)
