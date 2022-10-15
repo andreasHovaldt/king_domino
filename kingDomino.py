@@ -68,7 +68,7 @@ img4copy = np.copy(img4)
 img20 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/20.jpg")
 img20copy = np.copy(img20)
 
-
+'''
 ############# Loading Blurred Tiles #############
 seaTileBlur = cv2.imread("King Domino dataset/blurredTiles/seaTile.png")
 fieldTileBlur = cv2.imread("King Domino dataset/blurredTiles/fieldTile.png")
@@ -76,7 +76,7 @@ forestTileBlur = cv2.imread("King Domino dataset/blurredTiles/forestTile.png")
 plainsTileBlur = cv2.imread("King Domino dataset/blurredTiles/plainsTile.png")
 swampTileBlur = cv2.imread("King Domino dataset/blurredTiles/swampTile.png")
 mineTileBlur = cv2.imread("King Domino dataset/blurredTiles/mineTile.png")
-
+'''
 
 ############# Segmenting Boards #############
 img4List = segmentImage(img4copy)
@@ -89,9 +89,14 @@ img12info = getTileInfo(img12List)
 #print(img12info[0][0]["location"])
 
 
+img12biomeTest = determineBiome(img12List[4][4])
+print(img12biomeTest)
 
-
-
+'''
+meanTile = plainsTileBlur
+print(f"0 = {np.mean(meanTile[:,:,0])}  1 = {np.mean(meanTile[:,:,1])}  2 = {np.mean(meanTile[:,:,2])}")
+print(np.mean(meanTile))
+'''
 
 
 

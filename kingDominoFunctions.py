@@ -2,6 +2,19 @@ import cv2
 import numpy as np
 import random
 
+
+############# Loading Reference Blurred Tiles #############
+#Used for determineBiome()
+seaTileBlur = cv2.imread("King Domino dataset/blurredTiles/seaTile.png")
+fieldTileBlur = cv2.imread("King Domino dataset/blurredTiles/fieldTile.png")
+forestTileBlur = cv2.imread("King Domino dataset/blurredTiles/forestTile.png")
+plainsTileBlur = cv2.imread("King Domino dataset/blurredTiles/plainsTile.png")
+swampTileBlur = cv2.imread("King Domino dataset/blurredTiles/swampTile.png")
+mineTileBlur = cv2.imread("King Domino dataset/blurredTiles/mineTile.png")
+
+
+############# Functions #############
+
 #Show edges on image using canny method
 def edgeDetection(image):
     imageGray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -75,14 +88,50 @@ def getTileInfo (segmentList):
     
     return tileInfoList
 
-
 #Compute biome of tile
 def determineBiome(tile):
-    tileThing = tile #temporary code
-    #print("Determining biome...")
-    return random.choice(["Plains", "Forest", "Swamp", "Ocean", "Wheat", "Mine"])
+    #The tile to compute gets blurred
+    tileBlur = cv2.GaussianBlur(tile,(99,99),99)
     
-
+    #The tile gets compared with reference tiles and afterwards the pixel mean value is extracted
+    seaMean = np.mean(cv2.subtract(seaTileBlur, tileBlur))
+    fieldMean = np.mean(cv2.subtract(fieldTileBlur, tileBlur))
+    forestMean = np.mean(cv2.subtract(forestTileBlur, tileBlur))
+    plainsMean = np.mean(cv2.subtract(plainsTileBlur, tileBlur))
+    swampMean = np.mean(cv2.subtract(swampTileBlur, tileBlur))
+    mineMean = np.mean(cv2.subtract(mineTileBlur, tileBlur))
+    
+    #A dictionary with the mean values is created
+    meanList = {"seaMean": seaMean, 
+                "fieldMean": fieldMean, 
+                "forestMean": forestMean, 
+                "plainsMean": plainsMean, 
+                "swampMean": swampMean, 
+                "mineMean": mineMean}
+    
+    #The lowest mean value is found
+    meanListMin = min(meanList.values())
+    
+    #The lowest mean value is compared to the different dictionary values to find the corresponding biome
+    if (meanList["seaMean"] == meanListMin):
+        biome = "Sea"
+    elif (meanList["fieldMean"] == meanListMin):
+        biome = "Field"
+    elif (meanList["forestMean"] == meanListMin):
+        biome = "Forest"
+    elif (meanList["plainsMean"] == meanListMin):
+        biome = "Plains"
+    elif (meanList["swampMean"] == meanListMin):
+        biome = "Swamp"
+    elif (meanList["mineMean"] == meanListMin):
+        biome = "Mine"
+    else:
+        biome = "ERROR!"
+        print("determineBiomeTest Error!")
+    
+    #The biome is returned
+    return biome
+    
 #Compute amount of crowns on tile
 def computeCrowns(tile):
     tileThing = tile #temporary code
