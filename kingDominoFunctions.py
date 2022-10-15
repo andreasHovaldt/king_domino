@@ -130,7 +130,7 @@ def determineBiome(tile):
         print("determineBiomeTest Error!")
     
     #The biome is returned
-    return biome
+    return biome, meanList
     
 #Compute amount of crowns on tile
 def computeCrowns(tile):

@@ -2,7 +2,7 @@ import random
 import cv2
 import numpy as np
 
-from kingDominoFunctions import getTileInfo, segmentImage, determineBiome, computeCrowns
+from kingDominoFunctions import equalizeHistogram, getTileInfo, segmentImage, determineBiome, computeCrowns
 
 #Andreas version
 #Count king domino
@@ -55,12 +55,24 @@ def tileBoard(image, y=5, x=5):
             pass
 
 
+def writeBlurBoard(boardList):
+    for x in range(5):
+        for y in range(5):
+            tileBlur = cv2.GaussianBlur(boardList[y][x],(99,99),99)
+            cv2.imwrite(f"C:/Users/Andreas/Desktop/blurredBoard/{y}x{x}.png", tileBlur)
+
+
 
 ############################################### MAIN CODE ###############################################
 
 ############# Loading Whole Boards #############
 img12 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/12.jpg")
-img12copy = np.copy(img12)
+
+img12eq = equalizeHistogram(img12)
+img12copy = np.copy(img12eq)
+#img12HSV = cv2.cvtColor(img12, cv2.COLOR_BGR2HSV)
+#img12copy = np.copy(img12HSV)
+
 
 img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/4.jpg")
 img4copy = np.copy(img4)
@@ -68,15 +80,6 @@ img4copy = np.copy(img4)
 img20 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/20.jpg")
 img20copy = np.copy(img20)
 
-'''
-############# Loading Blurred Tiles #############
-seaTileBlur = cv2.imread("King Domino dataset/blurredTiles/seaTile.png")
-fieldTileBlur = cv2.imread("King Domino dataset/blurredTiles/fieldTile.png")
-forestTileBlur = cv2.imread("King Domino dataset/blurredTiles/forestTile.png")
-plainsTileBlur = cv2.imread("King Domino dataset/blurredTiles/plainsTile.png")
-swampTileBlur = cv2.imread("King Domino dataset/blurredTiles/swampTile.png")
-mineTileBlur = cv2.imread("King Domino dataset/blurredTiles/mineTile.png")
-'''
 
 ############# Segmenting Boards #############
 img4List = segmentImage(img4copy)
@@ -85,11 +88,14 @@ img20List = segmentImage(img20copy)
 
 
 ############# Create dictionary for tiles of boards #############
-img12info = getTileInfo(img12List)
+#img12info = getTileInfo(img12List)
 #print(img12info[0][0]["location"])
 
 
-img12biomeTest = determineBiome(img12List[4][4])
+writeBlurBoard(img12List)
+
+img12biomeTest, img12biomeMeanList = determineBiome(img12List[0][1])
+print(img12biomeMeanList)
 print(img12biomeTest)
 
 '''
@@ -97,6 +103,9 @@ meanTile = plainsTileBlur
 print(f"0 = {np.mean(meanTile[:,:,0])}  1 = {np.mean(meanTile[:,:,1])}  2 = {np.mean(meanTile[:,:,2])}")
 print(np.mean(meanTile))
 '''
+
+
+
 
 
 
