@@ -2,7 +2,7 @@ import random
 import cv2
 import numpy as np
 
-from kingDominoFunctions import equalizeHistogram, segmentImage, determineBiome, computeCrowns
+from kingDominoFunctions import getTileInfo, segmentImage, determineBiome, computeCrowns
 
 #Andreas version
 #Count king domino
@@ -58,10 +58,9 @@ def tileBoard(image, y=5, x=5):
 
 ############################################### MAIN CODE ###############################################
 
+############# Loading Whole Boards #############
 img12 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/12.jpg")
 img12copy = np.copy(img12)
-img12Gray = cv2.cvtColor(img12copy, cv2.COLOR_BGR2GRAY)
-img12Eq = equalizeHistogram(img12copy)
 
 img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/4.jpg")
 img4copy = np.copy(img4)
@@ -69,49 +68,43 @@ img4copy = np.copy(img4)
 img20 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/20.jpg")
 img20copy = np.copy(img20)
 
-############# Loading #############
+
+############# Loading Blurred Tiles #############
+seaTileBlur = cv2.imread("King Domino dataset/blurredTiles/seaTile.png")
+fieldTileBlur = cv2.imread("King Domino dataset/blurredTiles/fieldTile.png")
+forestTileBlur = cv2.imread("King Domino dataset/blurredTiles/forestTile.png")
+plainsTileBlur = cv2.imread("King Domino dataset/blurredTiles/plainsTile.png")
+swampTileBlur = cv2.imread("King Domino dataset/blurredTiles/swampTile.png")
+mineTileBlur = cv2.imread("King Domino dataset/blurredTiles/mineTile.png")
+
+
+############# Segmenting Boards #############
+img4List = segmentImage(img4copy)
 img12List = segmentImage(img12copy)
 img20List = segmentImage(img20copy)
 
-seaTile = img12List[2][4]
-fieldTile = img12List[0][0]
-forestTile = img12List[1][0]
-plainsTile = img12List[2][0]
-swampTile = img12List[4][0]
-mineTile = img20List[2][0]
-#testTile = img12List[2][1]
+
+############# Create dictionary for tiles of boards #############
+img12info = getTileInfo(img12List)
+#print(img12info[0][0]["location"])
+
+
+
+
+
+
 
 
 ############# Blurring #############
 #seaTileMedBlur = cv2.medianBlur(seaTile,99)
-seaTileGausBlur = cv2.GaussianBlur(seaTile,(99,99),99)
-fieldTileGausBlur = cv2.GaussianBlur(fieldTile,(99,99),99)
-forestTileGausBlur = cv2.GaussianBlur(forestTile,(99,99),99)
-plainsTileGausBlur = cv2.GaussianBlur(plainsTile,(99,99),99)
-swampTileGausBlur = cv2.GaussianBlur(swampTile,(99,99),99)
-mineTileGausBlur = cv2.GaussianBlur(mineTile,(99,99),99)
 #testTileGausBlur = cv2.GaussianBlur(testTile,(99,99),99)
 
-cv2.imwrite("C:/Users/Andreas/Desktop/blurredTiles/seaTile.png", seaTileGausBlur)
-cv2.imwrite("C:/Users/Andreas/Desktop/blurredTiles/fieldTile.png", fieldTileGausBlur)
-cv2.imwrite("C:/Users/Andreas/Desktop/blurredTiles/forestTile.png", forestTileGausBlur)
-cv2.imwrite("C:/Users/Andreas/Desktop/blurredTiles/plainsTile.png", plainsTileGausBlur)
-cv2.imwrite("C:/Users/Andreas/Desktop/blurredTiles/swampTile.png", swampTileGausBlur)
-cv2.imwrite("C:/Users/Andreas/Desktop/blurredTiles/mineTile.png", mineTileGausBlur)
+
 
 ############# Subtract #############
 #difference = cv2.subtract(seaTileGausBlur, testTileGausBlur)
 #difference = cv2.subtract(testTileGausBlur, seaTileGausBlur)
 
-
-
-#cv2.imshow("Sea tile", seaTile)
-#cv2.imshow("Sea tile Med Blur", seaTileMedBlur)
-#cv2.imshow("Sea tile Gaus Blur", seaTileGausBlur)
-#cv2.imshow("Test tile Gaus Blur", testTileGausBlur)
-#cv2.imshow("Difference", difference)
-#cv2.waitKey()
-#cv2.destroyAllWindows()
             
 
 
