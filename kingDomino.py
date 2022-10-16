@@ -87,9 +87,15 @@ img20eq = equalizeHistogram(img20)
 img26 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/26.jpg")
 img26eq = equalizeHistogram(img26)
 
+img27 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/27.jpg")
+img27eq = equalizeHistogram(img27)
+
+img28 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/28.jpg")
+img28eq = equalizeHistogram(img28)
 
 ############# Segmenting Boards #############
-img4List = segmentImage(img4eq)
+img4List = segmentImage(img4)
+img4ListEQ = segmentImage(img4eq)
 img12List = segmentImage(img12eq)
 img20List = segmentImage(img20eq)
 
@@ -109,11 +115,15 @@ img20List = segmentImage(img20eq)
 #print(img12biomeTest)
 
 
-boardBiomesWithText = writeBiomeText(img26eq)
+
+
+
+'''
+boardBiomesWithText = writeBiomeText(img4eq)
 cv2.imshow("Board with biome text", boardBiomesWithText)
 cv2.waitKey()
 cv2.destroyAllWindows()
-
+'''
 
 '''
 textTest = cv2.putText(img12List[0][3], "BiomeT", (10,25), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 2) #image, text, postion(x,y), font, fontscale, color, thicc
@@ -122,12 +132,18 @@ cv2.waitKey()
 cv2.destroyAllWindows()
 '''
 
-'''
-meanTile = plainsTileBlur
+
+
+### Blur mean testing ### 
+tileBlur = cv2.GaussianBlur(img4List[2][2],(99,99),99)
+meanTile = tileBlur
 print(f"0 = {np.mean(meanTile[:,:,0])}  1 = {np.mean(meanTile[:,:,1])}  2 = {np.mean(meanTile[:,:,2])}")
 print(np.mean(meanTile))
-'''
 
+cv2.imshow("window", tileBlur)
+cv2.waitKey()
+cv2.destroyAllWindows()
+# look into this: https://techvidvan.com/tutorials/detect-objects-of-similar-color-using-opencv-in-python/
 
 
 
