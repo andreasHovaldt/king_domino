@@ -5,12 +5,23 @@ import random
 
 ############# Loading Reference Blurred Tiles #############
 #Used for determineBiome()
+'''
+#Non equalized
 seaTileBlur = cv2.imread("King Domino dataset/blurredTiles/seaTile.png")
 fieldTileBlur = cv2.imread("King Domino dataset/blurredTiles/fieldTile.png")
 forestTileBlur = cv2.imread("King Domino dataset/blurredTiles/forestTile.png")
 plainsTileBlur = cv2.imread("King Domino dataset/blurredTiles/plainsTile.png")
 swampTileBlur = cv2.imread("King Domino dataset/blurredTiles/swampTile.png")
 mineTileBlur = cv2.imread("King Domino dataset/blurredTiles/mineTile.png")
+'''
+
+#Equalized
+seaTileBlur = cv2.imread("King Domino dataset/blurredTiles/seaTileEQ.png")
+fieldTileBlur = cv2.imread("King Domino dataset/blurredTiles/fieldTileEQ.png")
+forestTileBlur = cv2.imread("King Domino dataset/blurredTiles/forestTileEQ.png")
+plainsTileBlur = cv2.imread("King Domino dataset/blurredTiles/plainsTileEQ.png")
+swampTileBlur = cv2.imread("King Domino dataset/blurredTiles/swampTileEQ.png")
+mineTileBlur = cv2.imread("King Domino dataset/blurredTiles/mineTileEQ.png")
 
 
 ############# Functions #############
@@ -51,7 +62,7 @@ def equalizeHistogram(image):
 
 #Segment board into 25 tiles (5x5)
 def segmentImage(image):
-    height, width, channels = image.shape
+    height, width, _ = image.shape
     squareHeight = int(height / 5)
     squareWidth = int(width / 5)
     
@@ -94,12 +105,12 @@ def determineBiome(tile):
     tileBlur = cv2.GaussianBlur(tile,(99,99),99)
     
     #The tile gets compared with reference tiles and afterwards the pixel mean value is extracted
-    seaMean = np.mean(cv2.subtract(seaTileBlur, tileBlur))
+    seaMean = np.mean(cv2.subtract(seaTileBlur, tileBlur)) + 25
     fieldMean = np.mean(cv2.subtract(fieldTileBlur, tileBlur))
-    forestMean = np.mean(cv2.subtract(forestTileBlur, tileBlur))
-    plainsMean = np.mean(cv2.subtract(plainsTileBlur, tileBlur))
+    forestMean = np.mean(cv2.subtract(forestTileBlur, tileBlur)) + 40
+    plainsMean = np.mean(cv2.subtract(plainsTileBlur, tileBlur)) + 10
     swampMean = np.mean(cv2.subtract(swampTileBlur, tileBlur))
-    mineMean = np.mean(cv2.subtract(mineTileBlur, tileBlur))
+    mineMean = np.mean(cv2.subtract(mineTileBlur, tileBlur)) + 30
     
     #A dictionary with the mean values is created
     meanList = {"seaMean": seaMean, 
@@ -117,10 +128,10 @@ def determineBiome(tile):
         biome = "Sea"
     elif (meanList["fieldMean"] == meanListMin):
         biome = "Field"
-    elif (meanList["forestMean"] == meanListMin):
-        biome = "Forest"
     elif (meanList["plainsMean"] == meanListMin):
         biome = "Plains"
+    elif (meanList["forestMean"] == meanListMin):
+        biome = "Forest"
     elif (meanList["swampMean"] == meanListMin):
         biome = "Swamp"
     elif (meanList["mineMean"] == meanListMin):
@@ -132,6 +143,26 @@ def determineBiome(tile):
     #The biome is returned
     return biome, meanList
     
+#Computes biomes of board image and displays it on board image 
+def writeBiomeText(boardImage):
+    height, width, _ = boardImage.shape
+    squareHeight = int(height / 5)
+    squareWidth = int(width / 5)
+    
+    #Segment whole board into tiles
+    boardImageList = segmentImage(boardImage)
+    
+    #For loop goes through each tile, computes the biome, then writes it on the tile of board image
+    for y in range(5):
+        for x in range(5):
+            biome, _ = determineBiome(boardImageList[y][x])
+            
+            #cv2.putText(image, text, postion(x,y), font, fontscale, color, thicc)
+            outputImage = cv2.putText(boardImage, biome, ((squareHeight * x)+10, (squareWidth * y)+25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,0,0), 2)
+    
+    #returns the original board image with biome text on each tile 
+    return outputImage
+
 #Compute amount of crowns on tile
 def computeCrowns(tile):
     tileThing = tile #temporary code
