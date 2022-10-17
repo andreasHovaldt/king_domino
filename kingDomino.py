@@ -1,7 +1,7 @@
 from unittest import result
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 
 
@@ -61,7 +61,7 @@ def solidColour(slices, kernelSize ):
            
 
 
-           
+         
 
 
     
@@ -73,16 +73,29 @@ def solidColour(slices, kernelSize ):
 ##----------------End of function definitions---------------##
 
 
-img = cv2.imread("C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/Cropped and perspective corrected boards/4.jpg")
-crown = cv2.imread("C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/Crown templates/crown.jpg")
+img = cv2.imread("C:/Users/chris/OneDrive/Dokumenter/GitHub/king_domino/King Domino dataset/Cropped and perspective corrected boards/5.jpg")
+#crown = cv2.imread("C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/Crown templates/crown.jpg")
+FarmTile_withCrown = cv2.imread("C:/Users/chris/OneDrive/Dokumenter/GitHub/king_domino/King Domino dataset/Testing/farm.jpg")
+
+ 
+
 
 sliceList = slicing(img)
 #crowned = detectCrown(sliceList[0][1],crown)
 blurList = solidColour(sliceList,99)
+blurTile = cv2.GaussianBlur(FarmTile_withCrown,(99,99),0)
 
 
-cv2.imshow("full board",img)
-#cv2.imshow('square',sliceList[4][4])
+#potential way of comparing our tiles
+difference = cv2.subtract(blurList[0][0],blurTile)
+
+
+
+##---------------show images------------"
+
+
+cv2.imshow("full board",blurTile)
+cv2.imshow('square',difference)
 cv2.imshow('blurred',blurList[0][0])
 cv2.waitKey(0)
 cv2.destroyAllWindows()
