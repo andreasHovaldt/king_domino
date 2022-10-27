@@ -104,6 +104,7 @@ img20List = segmentImage(img20eq)
 #tileBlur = cv2.GaussianBlur(img20List[3][0],(99,99),99)
 #cv2.imwrite("C:/Users/Andreas/Documents/GitHub/king_domino/King Domino dataset/blurredTiles/mineTileEQ.png", tileBlur)
 
+
 ############# Create dictionary for tiles of boards #############
 #img12info = getTileInfo(img12List)
 #print(img12info[0][0]["location"])
@@ -117,44 +118,26 @@ img20List = segmentImage(img20eq)
 
 
 
+############# Compute and Write Biome on Board ############# 
+#boardBiomesWithText = writeBiomeText(img20eq)
+#cv2.imshow("Board with biome text", boardBiomesWithText)
+#cv2.waitKey()
+#cv2.destroyAllWindows()
 
-'''
-boardBiomesWithText = writeBiomeText(img4eq)
-cv2.imshow("Board with biome text", boardBiomesWithText)
-cv2.waitKey()
-cv2.destroyAllWindows()
-'''
-
-'''
-textTest = cv2.putText(img12List[0][3], "BiomeT", (10,25), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 2) #image, text, postion(x,y), font, fontscale, color, thicc
-cv2.imshow("text", textTest)
-cv2.waitKey()
-cv2.destroyAllWindows()
-'''
 
 
 
 ### Blur mean testing ### 
-tileBlur = cv2.GaussianBlur(img4List[2][2],(99,99),99)
-meanTile = tileBlur
+tileBlur1 = cv2.blur(img4List[2][2],(1001,1001))
+tileBlur2 = cv2.GaussianBlur(tileBlur1,(99,99),99)
+meanTile = tileBlur2
 print(f"0 = {np.mean(meanTile[:,:,0])}  1 = {np.mean(meanTile[:,:,1])}  2 = {np.mean(meanTile[:,:,2])}")
 print(np.mean(meanTile))
 
-cv2.imshow("window", tileBlur)
+cv2.imshow("window1", tileBlur1)
+cv2.imshow("window2", tileBlur2)
 cv2.waitKey()
 cv2.destroyAllWindows()
 # look into this: https://techvidvan.com/tutorials/detect-objects-of-similar-color-using-opencv-in-python/
 
 
-
-
-
-############# Blurring #############
-#seaTileMedBlur = cv2.medianBlur(seaTile,99)
-#testTileGausBlur = cv2.GaussianBlur(testTile,(99,99),99)
-
-
-
-############# Subtract #############
-#difference = cv2.subtract(seaTileGausBlur, testTileGausBlur)
-#difference = cv2.subtract(testTileGausBlur, seaTileGausBlur)
