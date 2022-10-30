@@ -159,7 +159,6 @@ def writeBiomeText(boardImage):
             
             #cv2.putText(image, text, postion(x,y), font, fontscale, color, thicc)
             outputImage = cv2.putText(boardImage, biome, ((squareHeight * x)+10, (squareWidth * y)+25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,0,0), 2)
-            #cv2.putText(img,)
     
     #returns the original board image with biome text on each tile 
     return outputImage
