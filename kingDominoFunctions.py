@@ -48,20 +48,29 @@ def crownDetection(image):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-#Equalize histogram of image (Both color and greyscale images)
+
 def equalizeHistogram(image):
-    imageOutput = np.copy(image)
+    '''
+    Equalize histogram of image-like type, either pass greyscale or BGR color image to function \n
+    Returns equalized image
+    '''
     if (len(image.shape) < 3):
         imageOutput = cv2.equalizeHist(imageOutput)
     
     elif (len(image.shape) == 3):
-        for c in range(image.shape[2]):
-            imageOutput[:,:,c] = cv2.equalizeHist(imageOutput[:,:,c])
+        imageOutput = np.copy(image)
+        imageOutput = cv2.cvtColor(imageOutput, cv2.COLOR_BGR2HSV)
+        imageOutput[:,:,2] = cv2.equalizeHist(imageOutput[:,:,2])
+        imageOutput = cv2.cvtColor(imageOutput, cv2.COLOR_HSV2BGR)
     
     return imageOutput
 
-#Segment board into 25 tiles (5x5)
+
 def segmentImage(image):
+    '''
+    Segment board into 25 tiles (5x5) \n
+    Returns list with tiles (Indexed by [Y][X])
+    '''
     height, width, _ = image.shape
     squareHeight = int(height / 5)
     squareWidth = int(width / 5)
@@ -83,8 +92,11 @@ def segmentImage(image):
     
     return sliceList
 
-#Creat dictionary with info for each tile of provided board
+
 def getTileInfo (segmentList):
+    '''
+    Create dictionary with info for each tile of provided board
+    '''
     tileInfoList = []
 
     for y in range(5):
@@ -109,7 +121,7 @@ def determineBiome(tile):
     fieldMean = np.mean(cv2.subtract(fieldTileBlur, tileBlur))
     forestMean = np.mean(cv2.subtract(forestTileBlur, tileBlur)) + 40
     plainsMean = np.mean(cv2.subtract(plainsTileBlur, tileBlur)) + 10
-    swampMean = np.mean(cv2.subtract(swampTileBlur, tileBlur))
+    swampMean = np.mean(cv2.subtract(swampTileBlur, tileBlur)) + 30
     mineMean = np.mean(cv2.subtract(mineTileBlur, tileBlur)) + 30
     
     #A dictionary with the mean values is created

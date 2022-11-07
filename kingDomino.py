@@ -76,7 +76,8 @@ if __name__ == "__main__":
 
 ############# Loading Whole Boards #############
 img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/4.jpg")
-img4eq = equalizeHistogram(img4)
+#img4eq = 
+#= equalizeHistogram(img4)
 
 img12 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/12.jpg")
 img12eq = equalizeHistogram(img12)
@@ -85,28 +86,30 @@ img20 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards
 img20eq = equalizeHistogram(img20)
 
 img26 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/26.jpg")
-img26eq = equalizeHistogram(img26)
+#img26eq = equalizeHistogram(img26)
 
 img27 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/27.jpg")
-img27eq = equalizeHistogram(img27)
+#img27eq = equalizeHistogram(img27)
 
 img28 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/28.jpg")
-img28eq = equalizeHistogram(img28)
+#img28eq = equalizeHistogram(img28)
 
 ############# Segmenting Boards #############
-img4List = segmentImage(img4)
-img4ListEQ = segmentImage(img4eq)
-img12List = segmentImage(img12eq)
-img20List = segmentImage(img20eq)
-
+#img4List = segmentImage(img4)
+#img4ListEQ = segmentImage(img4eq)
+img12List = segmentImage(img12)
+img12ListEQ = segmentImage(img12eq)
+img20List = segmentImage(img20)
+img20ListEQ = segmentImage(img20eq)
 
 ############# Create Blurred Tile #############
 #tileBlur = cv2.GaussianBlur(img20List[3][0],(99,99),99)
-#cv2.imwrite("C:/Users/Andreas/Documents/GitHub/king_domino/King Domino dataset/blurredTiles/mineTileEQ.png", tileBlur)
+#tileBlur = cv2.GaussianBlur(img20ListEQ[3][0],(99,99),99)
+#cv2.imwrite("C:/Users/andre/OneDrive/Dokumenter/GitHub/king_domino/King Domino dataset/blurredTiles/mineTileEQ.png", tileBlur)
 
 
 ############# Create dictionary for tiles of boards #############
-#img12info = getTileInfo(img12List)
+img12info = getTileInfo(img12List)
 #print(img12info[0][0]["location"])
 
 
@@ -119,15 +122,16 @@ img20List = segmentImage(img20eq)
 
 
 ############# Compute and Write Biome on Board ############# 
-#boardBiomesWithText = writeBiomeText(img20eq)
-#cv2.imshow("Board with biome text", boardBiomesWithText)
-#cv2.waitKey()
-#cv2.destroyAllWindows()
+boardBiomesWithText = writeBiomeText(img20eq)
+cv2.imshow("Board with biome text", boardBiomesWithText)
+cv2.waitKey()
+cv2.destroyAllWindows()
 
 
 
 
 ### Blur mean testing ### 
+'''
 tileBlur1 = cv2.blur(img4List[2][2],(1001,1001))
 tileBlur2 = cv2.GaussianBlur(tileBlur1,(99,99),99)
 meanTile = tileBlur2
@@ -139,5 +143,5 @@ cv2.imshow("window2", tileBlur2)
 cv2.waitKey()
 cv2.destroyAllWindows()
 # look into this: https://techvidvan.com/tutorials/detect-objects-of-similar-color-using-opencv-in-python/
-
+'''
 
