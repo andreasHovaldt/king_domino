@@ -20,38 +20,43 @@ for biome_name in biome_path_list:
     biome_path = f'King Domino dataset/sorted_biome_tiles/{biome_name}'
     biome_path_os = os.listdir(biome_path)
 
+    #Used for printing debug values
     current_biome_list = []
 
     for file_name in biome_path_os:
         #Read image
         current_tile = cv2.imread(f"{biome_path}/{file_name}")
         
-        #Convert to hsv and take mean hue value
+        ### Feature extraction ###
+        ##Convert to hsv and take mean hue value
         current_tile = cv2.cvtColor(current_tile, cv2.COLOR_BGR2HSV)
         current_tile_hue_mean = np.mean(current_tile[:,:,0])
 
+        ##Specific color pixel amount extraction
+        #Yellow
+        cv2.inRange(current_tile, 30, 45) 
+        
         field_biome_dict.append([current_tile_hue_mean, biome_name])
         
+        #Used for printing debug values
         current_biome_list.append(current_tile_hue_mean)
     
+    #Used for printing debug values
     print(f"Name: {biome_name}   meanVal: {np.mean(current_biome_list)}")
     
-    #print(f"{file_name} -> {current_tile_hue_mean}")
 
 
+#Creating CSV file with sorted biome data
 data_header = ['Hue mean', 'Biome name']
-
-#'''
 with open('biome_data.csv', 'w') as file:
     writer = csv.writer(file)
     writer.writerow(data_header)
     
     writer.writerows(field_biome_dict)
-#'''
 
 
+#Load biome data as data variable
 data = pd.read_csv("biome_data.csv")
-
 #print(data.at[69,'Hue mean'])
 #print(data.at[69,'Tile name'])
 #print(data)
