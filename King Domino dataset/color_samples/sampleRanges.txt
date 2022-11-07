@@ -1,0 +1,11 @@
+King Domino dataset/sorted_biome_tiles/field_biome/0.jpg
+yellow_sample = yellow_sample[40:60,40:60,:]
+
+King Domino dataset/sorted_biome_tiles/plains_biome/0.jpg
+green_sample = green_sample[50:70,50:70,:]
+
+King Domino dataset/sorted_biome_tiles/ocean_biome/6.jpg
+blue_sample = blue_sample[40:60,40:60,:]
+
+King Domino dataset/sorted_biome_tiles/plains_house_biome/4.jpg
+red_sample = red_sample[45:65,40:60,:]

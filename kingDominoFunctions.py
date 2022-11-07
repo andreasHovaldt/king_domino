@@ -111,7 +111,7 @@ def getTileInfo (segmentList):
     
     return tileInfoList
 
-#Compute biome of tile
+#Compute biome of tile (Old method)
 def determineBiome(tile):
     #The tile to compute gets blurred
     tileBlur = cv2.GaussianBlur(tile,(99,99),99)
