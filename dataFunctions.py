@@ -3,45 +3,30 @@ import numpy as np
 import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 
+########### Declaring functions for training data manipulation ###########
 
 def get_hue_mean(img):
+    '''
+    Compute HUE mean from BGR image
+    
+        Parameters:
+            img (mat): Image[BGR]
+            Returns (float): Mean value of HUE channel for image
+    '''
     hsv_img = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
     return np.mean(hsv_img[:,:,0])
-
-### Yellow sampling ###
-yellow_sample = cv2.imread("King Domino dataset/color_samples/yellow_sample.jpg")
-yellow_hue_mean = get_hue_mean(yellow_sample)
-yellow_lower , yellow_upper = yellow_hue_mean * 0.85 , yellow_hue_mean * 1.2
-
-### Green sampling ###
-green_sample = cv2.imread("King Domino dataset/color_samples/green_sample.jpg")
-green_hue_mean = get_hue_mean(green_sample)
-green_lower , green_upper = green_hue_mean * 0.8 , green_hue_mean * 1.3
-
-### Blue sampling ###
-blue_sample = cv2.imread("King Domino dataset/color_samples/blue_sample.jpg")
-blue_hue_mean = get_hue_mean(blue_sample)
-blue_lower , blue_upper = blue_hue_mean * 0.85 , blue_hue_mean * 1.3
-
-### Red sampling ###
-red_sample = cv2.imread("King Domino dataset/color_samples/red_sample.jpg")
-red_hue_mean = get_hue_mean(red_sample)
-red_upper = red_hue_mean * 1.4
-red_lower = 255 - red_upper
 
 
 def tile_feature_extraction(tile_hsv):
     '''
     Extracts different features from tile:\n
         * Hue mean (Key: "Hue mean")\n
-        * Hue color ranges (Keys: "Yellow", "Blue", "Green", "Red", and "Other")\n
+        * Hue color ranges (Keys: "Yellow", "Blue", "Green", and "Red")\n
         * Saturation mean (Key: "Saturation")\n
-    \n
-    Input: Tile image in HSV form \n
-    Returns: Dict with extracted features
     
         Parameters:
             tile_hsv (mat): Tile picture in HSV format
+            Returns (dict): Dict with extracted features
     '''
     feature_dict = {
         'Hue mean': 0,
@@ -49,7 +34,6 @@ def tile_feature_extraction(tile_hsv):
         'Blue': 0,
         'Green': 0,
         'Red': 0,
-        #'Other': 0,
         'Saturation': 0
     }
 
@@ -71,10 +55,6 @@ def tile_feature_extraction(tile_hsv):
             # Counts pixels within red hue range
             if tile_hsv[y,x,0] >= red_lower or tile_hsv[y,x,0] <= red_upper:
                 feature_dict["Red"] += 1
-
-            # Counts pixels within no hue range
-            #else:
-                #feature_dict["Other"] += 1
 
     # Calculates hue and saturation mean
     feature_dict["Hue mean"] = np.mean(tile_hsv[:,:,0])
@@ -114,21 +94,25 @@ def normalize_data(max_norm_val, data_path, output_path):
     data.to_csv(f"{output_path}")
 
 
-biome_path_list = [
-    "field_biome", "field_house_biome",
-    "forest_biome", "forest_house_biome",
-    "mine_biome",
-    "ocean_biome", "ocean_house_biome",
-    "plains_biome", "plains_house_biome",
-    "swamp_biome", "swamp_house_biome"
-    ]
-
 def normalizeValue(value, max_norm_val, max_val, min_val):
+        '''
+        Normalizes value from zero to given max normilization value with given max and min ranges
+        
+            Parameters:
+                value(int,float): Value to normalize
+                max_norm_val(int,float): Upper bound of nomilization value
+                max_val(int,float): The highest value from dataset
+                min_val(int,float): The lowest value from dataset
+                Returns(float): Normalized value within ranges given
+        '''
         output = max_norm_val/(max_val-min_val) * (value-min_val)
         return output
 
 
 def normalizeTileFeatures(tile_feature_dict, feature_list, max_norm_val, max_values, min_values):
+    '''
+    Normalizes values of feature dict (Different normlization for each feature)
+    '''
     for feature in feature_list:
         # Establishes max and min values for specific feature
         max_val = max_values[f'{feature}']
@@ -168,34 +152,82 @@ def determineBiome(tile):
     return biome_prediction[0]
 
 
+
+########### Declaring hue color samples ###########
+# Used to create lower and upper bounds for specfic hue ranges corresponding to yellow, green, blue and red 
+### Yellow sampling ###
+yellow_sample = cv2.imread("King Domino dataset/color_samples/yellow_sample.jpg")
+yellow_hue_mean = get_hue_mean(yellow_sample)
+yellow_lower , yellow_upper = yellow_hue_mean * 0.85 , yellow_hue_mean * 1.2
+
+### Green sampling ###
+green_sample = cv2.imread("King Domino dataset/color_samples/green_sample.jpg")
+green_hue_mean = get_hue_mean(green_sample)
+green_lower , green_upper = green_hue_mean * 0.8 , green_hue_mean * 1.3
+
+### Blue sampling ###
+blue_sample = cv2.imread("King Domino dataset/color_samples/blue_sample.jpg")
+blue_hue_mean = get_hue_mean(blue_sample)
+blue_lower , blue_upper = blue_hue_mean * 0.85 , blue_hue_mean * 1.3
+
+### Red sampling ###
+red_sample = cv2.imread("King Domino dataset/color_samples/red_sample.jpg")
+red_hue_mean = get_hue_mean(red_sample)
+red_upper = red_hue_mean * 1.4
+red_lower = 255 - red_upper
+
+
+
+########### Declaring global path to directory of training tiles ###########
+# Used for naming the determined biomes
+biome_path_list = [
+    "field_biome", "field_house_biome",
+    "forest_biome", "forest_house_biome",
+    "mine_biome",
+    "ocean_biome", "ocean_house_biome",
+    "plains_biome", "plains_house_biome",
+    "swamp_biome", "swamp_house_biome"
+    ]
+
+
+
+########### Loading training data and declaring training data related variables ###########
+# Loading training data
 data = pd.read_csv("biome_data.csv")
 data_normalized = pd.read_csv("biome_data_normalized.csv")
 
+# Declaring maximum and minimum values for data set
 data_max = data.max(axis=0)
 data_min = data.min(axis=0)
 
+# Declaring list containing types of features
 feature_list = data.columns[0:len(data.columns) - 1]
 
-### Seperate name column from data
-#Seperate name from data
+# Seperate name column from data and convert 'DataFrame' type to numpy array
 biome_names = data_normalized.pop('Biome name')
-#Convert DataFrame type to numpy array
 numpy_biome_names = biome_names.to_numpy()
 
-### Convert data to numpy array and remove redundant first column 
+# Convert data to numpy array and remove redundant first column 
 numpy_feature_data = data_normalized.to_numpy()
 numpy_feature_data = numpy_feature_data[:, 1:numpy_feature_data.shape[1]]
 
-### Numpy array with feature data and biome int name in last column
-combined_numpy_data = np.c_[numpy_feature_data, numpy_biome_names]
+# [Un-used] Numpy array with feature data and biome int name in last column
+#combined_numpy_data = np.c_[numpy_feature_data, numpy_biome_names]
 
 
-### Create classifier
+
+########### Create k-nearest-neighbor classifier ###########
+# No. of neighbors new tile is compared to 
 k = 5
+# Classifier is used for predicting new tile biomes in determineBiome() function
 clf = KNeighborsClassifier(n_neighbors=k, weights="uniform", algorithm="brute")
 clf.fit(X=numpy_feature_data, y=numpy_biome_names)
 
 
+
+
+
+########### Internal testing ###########
 if __name__ == "__main__":
     #current_tile = cv2.imread("King Domino dataset/sorted_biome_tiles/mine_biome/3.jpg")
     #current_tile = cv2.imread("King Domino dataset/sorted_biome_tiles/plains_house_biome/3.jpg")

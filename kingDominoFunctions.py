@@ -1,28 +1,7 @@
 import cv2
 import numpy as np
 import random
-
-
-############# Loading Reference Blurred Tiles #############
-#Used for determineBiome()
-'''
-#Non equalized
-seaTileBlur = cv2.imread("King Domino dataset/blurredTiles/seaTile.png")
-fieldTileBlur = cv2.imread("King Domino dataset/blurredTiles/fieldTile.png")
-forestTileBlur = cv2.imread("King Domino dataset/blurredTiles/forestTile.png")
-plainsTileBlur = cv2.imread("King Domino dataset/blurredTiles/plainsTile.png")
-swampTileBlur = cv2.imread("King Domino dataset/blurredTiles/swampTile.png")
-mineTileBlur = cv2.imread("King Domino dataset/blurredTiles/mineTile.png")
-'''
-
-#Equalized
-seaTileBlur = cv2.imread("King Domino dataset/blurredTiles/seaTileEQ.png")
-fieldTileBlur = cv2.imread("King Domino dataset/blurredTiles/fieldTileEQ.png")
-forestTileBlur = cv2.imread("King Domino dataset/blurredTiles/forestTileEQ.png")
-plainsTileBlur = cv2.imread("King Domino dataset/blurredTiles/plainsTileEQ.png")
-swampTileBlur = cv2.imread("King Domino dataset/blurredTiles/swampTileEQ.png")
-mineTileBlur = cv2.imread("King Domino dataset/blurredTiles/mineTileEQ.png")
-
+from dataFunctions import determineBiome
 
 ############# Functions #############
 
@@ -110,51 +89,7 @@ def getTileInfo (segmentList):
                 tileInfoList[y].append({"location":[y,x], "biome":biome, "crowns":crowns})
     
     return tileInfoList
-
-#Compute biome of tile (Old method)
-def determineBiome(tile):
-    #The tile to compute gets blurred
-    tileBlur = cv2.GaussianBlur(tile,(99,99),99)
-    
-    #The tile gets compared with reference tiles and afterwards the pixel mean value is extracted
-    seaMean = np.mean(cv2.subtract(seaTileBlur, tileBlur)) + 25
-    fieldMean = np.mean(cv2.subtract(fieldTileBlur, tileBlur))
-    forestMean = np.mean(cv2.subtract(forestTileBlur, tileBlur)) + 40
-    plainsMean = np.mean(cv2.subtract(plainsTileBlur, tileBlur)) + 10
-    swampMean = np.mean(cv2.subtract(swampTileBlur, tileBlur)) + 30
-    mineMean = np.mean(cv2.subtract(mineTileBlur, tileBlur)) + 30
-    
-    #A dictionary with the mean values is created
-    meanList = {"seaMean": seaMean, 
-                "fieldMean": fieldMean, 
-                "forestMean": forestMean, 
-                "plainsMean": plainsMean, 
-                "swampMean": swampMean, 
-                "mineMean": mineMean}
-    
-    #The lowest mean value is found
-    meanListMin = min(meanList.values())
-    
-    #The lowest mean value is compared to the different dictionary values to find the corresponding biome
-    if (meanList["seaMean"] == meanListMin):
-        biome = "Sea"
-    elif (meanList["fieldMean"] == meanListMin):
-        biome = "Field"
-    elif (meanList["plainsMean"] == meanListMin):
-        biome = "Plains"
-    elif (meanList["forestMean"] == meanListMin):
-        biome = "Forest"
-    elif (meanList["swampMean"] == meanListMin):
-        biome = "Swamp"
-    elif (meanList["mineMean"] == meanListMin):
-        biome = "Mine"
-    else:
-        biome = "ERROR!"
-        print("determineBiomeTest Error!")
-    
-    #The biome is returned
-    return biome, meanList
-    
+   
 #Computes biomes of board image and displays it on board image 
 def writeBiomeText(boardImage):
     height, width, _ = boardImage.shape
@@ -167,10 +102,10 @@ def writeBiomeText(boardImage):
     #For loop goes through each tile, computes the biome, then writes it on the tile of board image
     for y in range(5):
         for x in range(5):
-            biome, _ = determineBiome(boardImageList[y][x])
+            biome = determineBiome(boardImageList[y][x])
             
             #cv2.putText(image, text, postion(x,y), font, fontscale, color, thicc)
-            outputImage = cv2.putText(boardImage, biome, ((squareHeight * x)+10, (squareWidth * y)+25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,0,0), 2)
+            outputImage = cv2.putText(boardImage, biome, ((squareHeight * x)+10, (squareWidth * y)+10), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0,0,0), 1)
     
     #returns the original board image with biome text on each tile 
     return outputImage

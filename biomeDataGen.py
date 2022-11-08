@@ -1,7 +1,7 @@
 import cv2
 import os
 import csv
-from csvDataFunctions import tile_feature_extraction, normalize_data
+from dataFunctions import tile_feature_extraction, normalize_data
 
 
 # Declare directory paths to training tiles
@@ -12,7 +12,8 @@ biome_path_list = [
     "mine_biome",
     "ocean_biome", "ocean_house_biome",
     "plains_biome", "plains_house_biome",
-    "swamp_biome", "swamp_house_biome"
+    "swamp_biome", "swamp_house_biome",
+    
 ]
 
 
