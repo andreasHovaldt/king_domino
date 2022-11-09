@@ -58,7 +58,7 @@ if __name__ == "__main__":
     #     board_path = f'{folder_path}/{board_number}.jpg'
     #     current_board = cv2.imread(board_path)
     #     board_list = segmentImage(current_board)
-    #     writeBlurBoard(board_list,output_path,board_number)
+    #     writeBoard(board_list,output_path,board_number)
     
         
         

@@ -12,8 +12,7 @@ biome_path_list = [
     "mine_biome",
     "ocean_biome", "ocean_house_biome",
     "plains_biome", "plains_house_biome",
-    "swamp_biome", "swamp_house_biome",
-    
+    "swamp_biome", "swamp_house_biome"
 ]
 
 
@@ -70,8 +69,4 @@ with open('biome_data.csv', 'w') as file:
 normalize_max_val = 100
 normalize_data(normalize_max_val, "biome_data.csv", "biome_data_normalized.csv")
 
-
-# Load biome data as data variable
-#data = pd.read_csv("biome_data.csv")
-#data_normalized = pd.read_csv("biome_data_normalized.csv")
 

@@ -74,22 +74,22 @@ if __name__ == "__main__":
 
 
 ############# Loading Whole Boards #############
-img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/4.jpg")
+#img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/4.jpg")
 
 img12 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/12.jpg")
 
-img20 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/20.jpg")
+#img20 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/20.jpg")
 
-img26 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/26.jpg")
+#img26 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/26.jpg")
 
-img27 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/27.jpg")
+#img27 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/27.jpg")
 
-img28 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/28.jpg")
+#img28 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/28.jpg")
 
 ############# Segmenting Boards #############
-img4List = segmentImage(img4)
-img12List = segmentImage(img12)
-img20List = segmentImage(img20)
+#img4List = segmentImage(img4)
+#img12List = segmentImage(img12)
+#img20List = segmentImage(img20)
 
 
 ############# Create dictionary for tiles of boards #############

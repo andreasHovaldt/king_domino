@@ -96,13 +96,13 @@ def normalize_data(max_norm_val, data_path, output_path):
 
 def normalizeValue(value, max_norm_val, max_val, min_val):
         '''
-        Normalizes value from zero to given max normilization value with given max and min ranges
+        Normalizes value from zero to given max normilization value with given max and min ranges for value
         
             Parameters:
                 value(int,float): Value to normalize
                 max_norm_val(int,float): Upper bound of nomilization value
-                max_val(int,float): The highest value from dataset
-                min_val(int,float): The lowest value from dataset
+                max_val(int,float): The highest possible value for 'value'
+                min_val(int,float): The lowest possible value for 'value'
                 Returns(float): Normalized value within ranges given
         '''
         output = max_norm_val/(max_val-min_val) * (value-min_val)
@@ -175,20 +175,6 @@ red_sample = cv2.imread("King Domino dataset/color_samples/red_sample.jpg")
 red_hue_mean = get_hue_mean(red_sample)
 red_upper = red_hue_mean * 1.4
 red_lower = 255 - red_upper
-
-
-
-########### Declaring global path to directory of training tiles ###########
-# Used for naming the determined biomes
-biome_path_list = [
-    "field_biome", "field_house_biome",
-    "forest_biome", "forest_house_biome",
-    "mine_biome",
-    "ocean_biome", "ocean_house_biome",
-    "plains_biome", "plains_house_biome",
-    "swamp_biome", "swamp_house_biome"
-    ]
-
 
 
 ########### Loading training data and declaring training data related variables ###########

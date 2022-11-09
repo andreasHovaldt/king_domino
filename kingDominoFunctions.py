@@ -15,7 +15,7 @@ def edgeDetection(image):
     #cv2.imshow("Image Blur", imageBlur)
     return imageCannyEdge
 
-#Detect crowns on image (Not operational)
+#Detect crowns on image (Legacy)
 def crownDetection(image):
     imageHSV = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     imageSaturation = imageHSV[:,:,1]
@@ -26,6 +26,12 @@ def crownDetection(image):
     cv2.imshow("Image crown thresh", imageCrownThresh)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+#Compute amount of crowns on tile (Legacy)
+def computeCrowns(tile):
+    tileThing = tile #temporary code
+    #print("Computing crowns...")
+    return random.randrange(0,3,1)
 
 
 def equalizeHistogram(image):
@@ -110,8 +116,3 @@ def writeBiomeText(boardImage):
     #returns the original board image with biome text on each tile 
     return outputImage
 
-#Compute amount of crowns on tile
-def computeCrowns(tile):
-    tileThing = tile #temporary code
-    #print("Computing crowns...")
-    return random.randrange(0,3,1)
