@@ -5,7 +5,7 @@ import os
 
 from sklearn.neighbors import KNeighborsClassifier
 from dataFunctions import tile_feature_extraction
-from kingDominoFunctions import segmentImage
+from kingDominoFunctions import segmentImage, equalizeHistogram
 
 
 
@@ -29,9 +29,29 @@ def writeBoard(boardList, pathStr, board_num):
 
 
 if __name__ == "__main__":
-    img = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/12.jpg")
-    img_lab = cv2.cvtColor(img, cv2.COLOR_BGR2Lab)
-    print("done")
+    img12 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/12.jpg")
+    img70 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/70.jpg")
+    img_lab = cv2.cvtColor(img12, cv2.COLOR_BGR2Lab)
+    img_L = img_lab[:,:,0]
+    img_a = img_lab[:,:,1]
+    img_b = img_lab[:,:,2]
+    
+    img12_hsv = cv2.cvtColor(img12, cv2.COLOR_BGR2HSV)
+    print([np.mean(img12[:,:,0]), np.mean(img12[:,:,1]), np.mean(img12[:,:,2])])
+    
+    img12_eq = equalizeHistogram(img12)
+    img70_eq = equalizeHistogram(img70)
+    cv2.imshow("img12", img12)
+    cv2.imshow("eq12", img12_eq)
+    cv2.imshow("img70", img70)
+    cv2.imshow("eq70", img70_eq)
+    cv2.waitKey()
+    cv2.destroyAllWindows()
+    #print("done")
+    
+    img12_hsv_eq = cv2.cvtColor(img12_eq, cv2.COLOR_BGR2HSV)
+    #print([np.mean(img12_eq[:,:,0]), np.mean(img12_eq[:,:,1]), np.mean(img12_eq[:,:,2])])
+    print(np.mean(img12_eq))
     
     pass
     

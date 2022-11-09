@@ -4,7 +4,7 @@ import csv
 from dataFunctions import tile_feature_extraction, normalize_data
 
 
-# # Declare directory paths to training tiles
+# Declare directory paths to training tiles
 # folder_path = "King Domino dataset/sorted_biome_tiles"
 # biome_path_list = [
 #     "field", "field_house", "forest", "forest_house",
@@ -51,8 +51,9 @@ for biome_name in biome_path_list:
         ### Append current biome features to global list
         biome_feature_list.append([tile_feature_dict["Hue mean"], tile_feature_dict["Yellow"], 
                                    tile_feature_dict["Red"], tile_feature_dict["Green"], 
-                                   tile_feature_dict["Blue"], tile_feature_dict["Saturation"], 
-                                   biome_name])
+                                   tile_feature_dict["Blue"], tile_feature_dict["Saturation"],
+                                   tile_feature_dict["RedEQ"], tile_feature_dict["GreenEQ"], 
+                                   tile_feature_dict["BlueEQ"], biome_name])
     
 print("Done processing dataset!")
 
@@ -61,7 +62,7 @@ print("Done processing dataset!")
 #---------------------------- Create CSV file with sorted biome data, afterwards the data is normalized ----------------------------#
 
 # Defining column names for data file
-data_header = ['Hue mean', 'Yellow', 'Red', 'Green', 'Blue', 'Saturation', 'Biome name']
+data_header = ['Hue mean', 'Yellow', 'Red', 'Green', 'Blue', 'Saturation', 'RedEQ', 'GreenEQ', 'BlueEQ', 'Biome name']
 # Create and open .csv data file (First str is file path, Second str is 'w' for write, 'r' for read)
 with open('biome_data.csv', 'w') as file:
     # Create writer object for the file being operated on

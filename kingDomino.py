@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-
+import os
 from kingDominoFunctions import writeBiomeText, equalizeHistogram, getTileInfo, segmentImage, determineBiome, computeCrowns
 
 #Andreas version
@@ -83,17 +83,23 @@ def main():
 
 
     ############# Compute and Write Biome on Board ############# 
-    def writeBiomeAndShow(board_number):
-        print(f"Processing board {board_number}...")
-        board = cv2.imread(f"King Domino dataset/Cropped and perspective corrected boards/{board_number}.jpg")
+    def writeBiomeAndShow(board_filename):
+        print(f"Processing board [{board_filename}]...")
+        board = cv2.imread(f"King Domino dataset/Cropped and perspective corrected boards/{board_filename}")
         board_biomes = writeBiomeText(board)
-        cv2.imshow(f"board{board_number}biomes", board_biomes)
-        cv2.waitKey()
-        cv2.destroyAllWindows()
+        cv2.imshow(f"Board [{board_filename}] with biome prediction", board_biomes)
 
-    writeBiomeAndShow(12)
-    writeBiomeAndShow(20)
-    writeBiomeAndShow(28)
+    
+    untrained_boards_list = os.listdir('King Domino dataset/untrained_boards')
+    
+    for board in untrained_boards_list:
+        writeBiomeAndShow(board)
+        key = cv2.waitKey()
+        if key == 27: # ESC
+            break
+        cv2.destroyAllWindows()
+    cv2.destroyAllWindows
+
 
 
 # look into this: https://techvidvan.com/tutorials/detect-objects-of-similar-color-using-opencv-in-python/

@@ -5,6 +5,22 @@ from sklearn.neighbors import KNeighborsClassifier
 
 ########### Declaring functions for training data manipulation ###########
 
+def equalizeHistogram(image):
+    '''
+    Equalize histogram of image-like type, either pass greyscale or BGR color image to function \n
+    Returns equalized image
+    '''
+    if (len(image.shape) < 3):
+        imageOutput = cv2.equalizeHist(imageOutput)
+    
+    elif (len(image.shape) == 3):
+        imageOutput = np.copy(image)
+        imageOutput = cv2.cvtColor(imageOutput, cv2.COLOR_BGR2HSV)
+        imageOutput[:,:,2] = cv2.equalizeHist(imageOutput[:,:,2])
+        imageOutput = cv2.cvtColor(imageOutput, cv2.COLOR_HSV2BGR)
+    
+    return imageOutput
+
 def get_hue_mean(img):
     '''
     Compute HUE mean from BGR image
@@ -31,15 +47,19 @@ def tile_feature_extraction(tile):
     feature_dict = {
         'Hue mean': 0,
         'Yellow': 0,
-        'Blue': 0,
-        'Green': 0,
         'Red': 0,
-        'Saturation': 0
+        'Green': 0,
+        'Blue': 0,
+        'Saturation': 0,
+        'RedEQ': 0,
+        'GreenEQ': 0,
+        'BlueEQ': 0
     }
 
     # Convert tile to hsv and lab
     tile_hsv = cv2.cvtColor(tile, cv2.COLOR_BGR2HSV)
     tile_lab = cv2.cvtColor(tile, cv2.COLOR_BGR2Lab)
+    
     
     for y in range(tile_hsv.shape[0]):
         for x in range(tile_hsv.shape[1]):
@@ -48,6 +68,10 @@ def tile_feature_extraction(tile):
             if tile_hsv[y,x,0] >= yellow_lower and tile_hsv[y,x,0] <= yellow_upper:
                 feature_dict["Yellow"] += 1
 
+            # Counts pixels within red hue range
+            if tile_hsv[y,x,0] >= red_lower or tile_hsv[y,x,0] <= red_upper:
+                feature_dict["Red"] += 1
+            
             # Counts pixels within green hue range
             if tile_hsv[y,x,0] >= green_lower and tile_hsv[y,x,0] <= green_upper:
                 feature_dict["Green"] += 1
@@ -56,16 +80,22 @@ def tile_feature_extraction(tile):
             if tile_hsv[y,x,0] >= blue_lower and tile_hsv[y,x,0] <= blue_upper:
                 feature_dict["Blue"] += 1
 
-            # Counts pixels within red hue range
-            if tile_hsv[y,x,0] >= red_lower or tile_hsv[y,x,0] <= red_upper:
-                feature_dict["Red"] += 1
-                
+            
             # Counts pixels within lab
-            #if
+            
 
     # Calculates hue and saturation mean
     feature_dict["Hue mean"] = np.mean(tile_hsv[:,:,0])
     feature_dict["Saturation"] = np.mean(tile_hsv[:,:,1])
+    
+    
+    # Equalize BGR image
+    tile_eq = equalizeHistogram(tile)
+    
+    # Calculates channel means for equalized BGR image
+    feature_dict["RedEQ"] = np.mean(tile_eq[:,:,2])
+    feature_dict["GreenEQ"] = np.mean(tile_eq[:,:,1])
+    feature_dict["BlueEQ"] = np.mean(tile_eq[:,:,0])
     
     return feature_dict
 
@@ -148,7 +178,9 @@ def determineBiome(tile):
     # Convert feature dict to list
     features_normalized_list = [features_normalized["Hue mean"], features_normalized["Yellow"], 
                                features_normalized["Red"], features_normalized["Green"], 
-                               features_normalized["Blue"], features_normalized["Saturation"]]
+                               features_normalized["Blue"], features_normalized["Saturation"],
+                               features_normalized["RedEQ"], features_normalized["GreenEQ"],
+                               features_normalized["BlueEQ"]]
     
     # Predict biome type
     biome_prediction = clf.predict([features_normalized_list])
