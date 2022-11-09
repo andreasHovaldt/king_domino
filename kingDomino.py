@@ -13,15 +13,14 @@ class kingdom:
         self.list = segmentImage(image)
     
     
-    def tile(self, yPos, xPos):
-        dominoTile(self.list[yPos][xPos])
+    #def tile(self, yPos, xPos):
+    #    dominoTile(self.list[yPos][xPos])
     
     
     def getPoints(self):
         #Calculate points
         pass
     
-
     
 class dominoTile:
     def __init__(self, tile):
@@ -91,15 +90,22 @@ def main():
 
     
     untrained_boards_list = os.listdir('King Domino dataset/untrained_boards')
-    
+    wrong_predictions = 0
+    correct_predictions = 0
+    total_predictions = 0
     for board in untrained_boards_list:
         writeBiomeAndShow(board)
         key = cv2.waitKey()
         if key == 27: # ESC
             break
         cv2.destroyAllWindows()
+        userInput = input(f"How many wrong predictions? [int]: ")
+        wrong_predictions += int(userInput)
+        correct_predictions += 25 - int(userInput)
+        total_predictions += 25
     cv2.destroyAllWindows
 
+    print(f"Precision = {(correct_predictions/total_predictions)*100}% -> {correct_predictions}/{total_predictions}")
 
 
 # look into this: https://techvidvan.com/tutorials/detect-objects-of-similar-color-using-opencv-in-python/
