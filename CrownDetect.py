@@ -47,12 +47,12 @@ class CrownDetect:
 
     
             #we show the current template being used for matching
-            #cv2.imshow('curr_temp',template_array[i])
+            cv2.imshow('curr_temp',template_array[i])
 
-            #following line is used if the middle results of matching is to be showed
-            # cv2.imshow(f't{i}',res1)
-            #cv2.waitKey(0)
-            # cv2.destroyWindow(f't{i}')
+            # following line is used if the middle results of matching is to be showed
+            cv2.imshow(f't{i}',res1)
+            cv2.waitKey(0)
+            cv2.destroyWindow(f't{i}')
             #same process as above is repeated for each 90degree rotation of the crown
 
 

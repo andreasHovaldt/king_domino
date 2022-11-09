@@ -84,12 +84,12 @@ def detectCrown(slice,template,t):
 
     
         #we show the current template being used for matching
-        #cv2.imshow('curr_temp',template_array[i])
+        cv2.imshow('curr_temp',template_array[i])
 
         #following line is used if the middle results of matching is to be showed
-       # cv2.imshow(f't{i}',res1)
-        #cv2.waitKey(0)
-       # cv2.destroyWindow(f't{i}')
+        cv2.imshow(f't{i}',res1)
+        cv2.waitKey(0)
+        cv2.destroyWindow(f't{i}')
         #same process as above is repeated for each 90degree rotation of the crown
 
 
@@ -112,7 +112,7 @@ def solidColour(slices, kernelSize ):
 ##----------------End of function definitions---------------##
 
 
-img = cv2.imread("C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/Cropped and perspective corrected boards/54.jpg")
+img = cv2.imread("C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/Cropped and perspective corrected boards/6.jpg")
 
 
 #following line reads the templates correlating to a crown on each type of tile
@@ -131,9 +131,9 @@ sliceList = slicing(img)
 
 cv2.imshow('fullimg', img)
 
-# cv2.waitKey(0)
+cv2.waitKey(0)
 
-# #following lines run the function for each of the templates
+#following lines run the function for each of the templates
 # detectCrown(img,swamp_template,0.6)
 # detectCrown(img,mine_template,0.6)
 # detectCrown(img,ocean_template,0.6)
@@ -143,8 +143,9 @@ cv2.imshow('fullimg', img)
 
 
 #now use the draw crown function to draw on top of the image
-#drawCrown(img)
+drawCrown(img)
 #display the final image 
+
 boxes = list()
 
 
@@ -152,21 +153,18 @@ boxes = list()
 cd = CrownDetect(boxes)
 
 
-for i in range(5):
-    boxes = list()
-    for j in range(5):
-        cd = CrownDetect(boxes)
-        cd.findCrown(sliceList[i][j],templates,0.6)
-        cv2.imshow(f'slice{i},{j}',sliceList[i][j])
-        cv2.waitKey(0)
-        boxes = list()
+# for i in range(5):
+#     boxes = list()
+#     for j in range(5):
+#         cd = CrownDetect(boxes)
+#         cd.findCrown(sliceList[i][j],templates,0.6)
+#         cv2.imshow(f'slice{i},{j}',sliceList[i][j])
+#         cv2.waitKey(0)
+#         boxes = list()
 
+cd.findCrown(img,templates,0.6)
 
-
-
-
-
-
+cv2.imshow("final",img)
 
 cv2.waitKey(0)
 
