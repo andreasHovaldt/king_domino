@@ -17,7 +17,7 @@ def get_hue_mean(img):
     return np.mean(hsv_img[:,:,0])
 
 
-def tile_feature_extraction(tile_hsv):
+def tile_feature_extraction(tile):
     '''
     Extracts different features from tile:\n
         * Hue mean (Key: "Hue mean")\n
@@ -25,7 +25,7 @@ def tile_feature_extraction(tile_hsv):
         * Saturation mean (Key: "Saturation")\n
     
         Parameters:
-            tile_hsv (mat): Tile picture in HSV format
+            tile (mat): Tile picture in BGR format
             Returns (dict): Dict with extracted features
     '''
     feature_dict = {
@@ -37,6 +37,10 @@ def tile_feature_extraction(tile_hsv):
         'Saturation': 0
     }
 
+    # Convert tile to hsv and lab
+    tile_hsv = cv2.cvtColor(tile, cv2.COLOR_BGR2HSV)
+    tile_lab = cv2.cvtColor(tile, cv2.COLOR_BGR2Lab)
+    
     for y in range(tile_hsv.shape[0]):
         for x in range(tile_hsv.shape[1]):
             
@@ -55,6 +59,9 @@ def tile_feature_extraction(tile_hsv):
             # Counts pixels within red hue range
             if tile_hsv[y,x,0] >= red_lower or tile_hsv[y,x,0] <= red_upper:
                 feature_dict["Red"] += 1
+                
+            # Counts pixels within lab
+            #if
 
     # Calculates hue and saturation mean
     feature_dict["Hue mean"] = np.mean(tile_hsv[:,:,0])
@@ -131,11 +138,9 @@ def determineBiome(tile):
             tile (mat): Tile image[BGR]
             returns (str): Biome prediction
     '''
-    # Convert tile to hsv
-    tile_hsv = cv2.cvtColor(tile, cv2.COLOR_BGR2HSV)
     
     # Extract features from tile
-    features = tile_feature_extraction(tile_hsv)
+    features = tile_feature_extraction(tile)
     
     # Normalize features
     features_normalized = normalizeTileFeatures(features,feature_list,100,data_max,data_min)
@@ -148,7 +153,6 @@ def determineBiome(tile):
     # Predict biome type
     biome_prediction = clf.predict([features_normalized_list])
     
-    #print(biome_prediction[0])
     return biome_prediction[0]
 
 
@@ -189,6 +193,7 @@ data_min = data.min(axis=0)
 # Declaring list containing types of features
 feature_list = data.columns[0:len(data.columns) - 1]
 
+
 # Seperate name column from data and convert 'DataFrame' type to numpy array
 biome_names = data_normalized.pop('Biome name')
 numpy_biome_names = biome_names.to_numpy()
@@ -204,7 +209,7 @@ numpy_feature_data = numpy_feature_data[:, 1:numpy_feature_data.shape[1]]
 
 ########### Create k-nearest-neighbor classifier ###########
 # No. of neighbors new tile is compared to 
-k = 5
+k = 3
 # Classifier is used for predicting new tile biomes in determineBiome() function
 clf = KNeighborsClassifier(n_neighbors=k, weights="uniform", algorithm="brute")
 clf.fit(X=numpy_feature_data, y=numpy_biome_names)
@@ -220,13 +225,16 @@ if __name__ == "__main__":
     #current_tile = cv2.imread("King Domino dataset/sorted_biome_tiles/forest_biome/9.jpg")
     #current_tile = cv2.imread("King Domino dataset/sorted_biome_tiles/ocean_biome/4.jpg")
     #current_tile = cv2.imread("King Domino dataset/sorted_biome_tiles/swamp_house_biome/0.jpg")
-    current_tile = cv2.imread("King Domino dataset/sorted_biome_tiles/field_house_biome/1.jpg")
+    current_tile = cv2.imread("King Domino dataset/sorted_biome_tiles/field/0.jpg")
 
-    current_tile = cv2.cvtColor(current_tile, cv2.COLOR_BGR2HSV)
-
-    print(tile_feature_extraction(current_tile))
+    print(determineBiome(current_tile))
     
-    print(f"Yellow  -->  mean:{yellow_hue_mean}  lower:{yellow_lower}  upper:{yellow_upper}")
-    print(f"Green  -->  mean:{green_hue_mean}  lower:{green_lower}  upper:{green_upper}")
-    print(f"Blue  -->  mean:{blue_hue_mean}  lower:{blue_lower}  upper:{blue_upper}")
-    print(f"Red  -->  mean:{red_hue_mean}  lower:{red_lower}  upper:{red_upper}")
+    
+    #current_tile = cv2.cvtColor(current_tile, cv2.COLOR_BGR2HSV)
+
+    # print(tile_feature_extraction(current_tile))
+    
+    # print(f"Yellow  -->  mean:{yellow_hue_mean}  lower:{yellow_lower}  upper:{yellow_upper}")
+    # print(f"Green  -->  mean:{green_hue_mean}  lower:{green_lower}  upper:{green_upper}")
+    # print(f"Blue  -->  mean:{blue_hue_mean}  lower:{blue_lower}  upper:{blue_upper}")
+    # print(f"Red  -->  mean:{red_hue_mean}  lower:{red_lower}  upper:{red_upper}")

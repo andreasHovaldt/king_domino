@@ -29,13 +29,17 @@ def writeBoard(boardList, pathStr, board_num):
 
 
 if __name__ == "__main__":
+    img = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/12.jpg")
+    img_lab = cv2.cvtColor(img, cv2.COLOR_BGR2Lab)
+    print("done")
+    
     pass
     
     # ### Rename files in directory
-    # folder_path = 'C:/Users/Andreas/Desktop/new_sorted_biome_tiles/table'
+    # folder_path = 'King Domino dataset/sorted_biome_tiles_simplified/swamp_house'
     # dir_list = os.listdir(folder_path)
     # #print(dir_list)
-    # name_number = 0
+    # name_number = 26
     # for tile in dir_list:
     #     os.rename(f'{folder_path}/{tile}', f'{folder_path}/{name_number}.jpg')
     #     name_number += 1

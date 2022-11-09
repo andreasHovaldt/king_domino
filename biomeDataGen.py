@@ -4,16 +4,23 @@ import csv
 from dataFunctions import tile_feature_extraction, normalize_data
 
 
-# Declare directory paths to training tiles
-folder_path = "King Domino dataset/sorted_biome_tiles"
+# # Declare directory paths to training tiles
+# folder_path = "King Domino dataset/sorted_biome_tiles"
+# biome_path_list = [
+#     "field", "field_house", "forest", "forest_house",
+#     "mine", "ocean", "ocean_house", "plains", "plains_house",
+#     "start_blue", "start_blue_castle", "start_green", "start_green_castle",
+#     "start_red", "start_red_castle", "start_yellow", "start_yellow_castle",
+#     "swamp", "swamp_house", "table"
+# ]
+
+folder_path = "King Domino dataset/sorted_biome_tiles_simplified"
 biome_path_list = [
-    "field_biome", "field_house_biome",
-    "forest_biome", "forest_house_biome",
-    "mine_biome",
-    "ocean_biome", "ocean_house_biome",
-    "plains_biome", "plains_house_biome",
-    "swamp_biome", "swamp_house_biome"
+    "field", "forest",
+    "mine", "ocean", "plains",
+    "start", "swamp", "table"
 ]
+
 
 
 # Global list used to temporarily store feature and, later on, to create .csv data file
@@ -24,6 +31,8 @@ biome_feature_list = []
 
 # Loop through the different biome tile folders
 for biome_name in biome_path_list:
+    print(f"Processing '{biome_name}' tiles...")
+    
     # Declare full path to folder with current training tiles
     biome_path = f'{folder_path}/{biome_name}'
     
@@ -36,8 +45,6 @@ for biome_name in biome_path_list:
         current_tile = cv2.imread(f"{biome_path}/{file_name}")
         
         ### Feature extraction ###
-        # Convert to hsv
-        current_tile = cv2.cvtColor(current_tile, cv2.COLOR_BGR2HSV)
         # Pass tile to function for feature extraction
         tile_feature_dict = tile_feature_extraction(current_tile)
         
@@ -47,7 +54,6 @@ for biome_name in biome_path_list:
                                    tile_feature_dict["Blue"], tile_feature_dict["Saturation"], 
                                    biome_name])
     
-    print(f"Processed '{biome_name}' tiles...")
 print("Done processing dataset!")
 
 

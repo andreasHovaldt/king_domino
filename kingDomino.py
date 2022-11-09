@@ -67,57 +67,41 @@ def writeBlurBoard(boardList, pathStr):
 
 ############################################### MAIN CODE ###############################################
 def main():
-    pass
+    ### Loading Whole Boards ###
+    #img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/4.jpg")
+
+
+    ### Segmenting Boards ###
+    #img4List = segmentImage(img4)
+    #img12List = segmentImage(img12)
+    #img20List = segmentImage(img20)
+
+
+    ### Create dictionary for tiles of boards ###
+    #img12info = getTileInfo(img12List)
+    #print(img12info[0][0]["location"])
+
+
+    ############# Compute and Write Biome on Board ############# 
+    def writeBiomeAndShow(board_number):
+        print(f"Processing board {board_number}...")
+        board = cv2.imread(f"King Domino dataset/Cropped and perspective corrected boards/{board_number}.jpg")
+        board_biomes = writeBiomeText(board)
+        cv2.imshow(f"board{board_number}biomes", board_biomes)
+        cv2.waitKey()
+        cv2.destroyAllWindows()
+
+    writeBiomeAndShow(12)
+    writeBiomeAndShow(20)
+    writeBiomeAndShow(28)
+
+
+# look into this: https://techvidvan.com/tutorials/detect-objects-of-similar-color-using-opencv-in-python/
 
 if __name__ == "__main__":
     main()
 
 
-############# Loading Whole Boards #############
-#img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/4.jpg")
-
-img12 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/12.jpg")
-
-#img20 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/20.jpg")
-
-#img26 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/26.jpg")
-
-#img27 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/27.jpg")
-
-#img28 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/28.jpg")
-
-############# Segmenting Boards #############
-#img4List = segmentImage(img4)
-#img12List = segmentImage(img12)
-#img20List = segmentImage(img20)
 
 
-############# Create dictionary for tiles of boards #############
-#img12info = getTileInfo(img12List)
-#print(img12info[0][0]["location"])
-
-
-############# Compute and Write Biome on Board ############# 
-boardBiomesWithText = writeBiomeText(img12)
-cv2.imshow("Board with biome text", boardBiomesWithText)
-cv2.waitKey()
-cv2.destroyAllWindows()
-
-
-
-
-### Blur mean testing ### 
-'''
-tileBlur1 = cv2.blur(img4List[2][2],(1001,1001))
-tileBlur2 = cv2.GaussianBlur(tileBlur1,(99,99),99)
-meanTile = tileBlur2
-print(f"0 = {np.mean(meanTile[:,:,0])}  1 = {np.mean(meanTile[:,:,1])}  2 = {np.mean(meanTile[:,:,2])}")
-print(np.mean(meanTile))
-
-cv2.imshow("window1", tileBlur1)
-cv2.imshow("window2", tileBlur2)
-cv2.waitKey()
-cv2.destroyAllWindows()
-# look into this: https://techvidvan.com/tutorials/detect-objects-of-similar-color-using-opencv-in-python/
-'''
 
