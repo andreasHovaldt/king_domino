@@ -116,13 +116,14 @@ img = cv2.imread("C:/Users/chris/Documents/GitHub/king_domino/King Domino datase
 
 
 #following line reads the templates correlating to a crown on each type of tile
-swamp_template = cv2.imread('C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/testing/swamp.jpg')
-forest_template = cv2.imread('C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/testing/forestCrown.jpg')
-mine_template = cv2.imread('C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/testing/mineCrown.jpg')
-ocean_template = cv2.imread('C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/testing/oceanCrown.jpg')
-field_template = cv2.imread('C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/testing/fieldCrown.jpg')
-grass_template = cv2.imread('C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/testing/grassCrown.jpg')
+swamp_template = cv2.imread('C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/crown_templates/swampCrown.jpg')
+forest_template = cv2.imread('C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/crown_templates/forestCrown.jpg')
+mine_template = cv2.imread('C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/crown_templates/mineCrown.jpg')
+ocean_template = cv2.imread('C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/crown_templates/oceanCrown.jpg')
+field_template = cv2.imread('C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/crown_templates/fieldCrown.jpg')
+grass_template = cv2.imread('C:/Users/chris/Documents/GitHub/king_domino/King Domino dataset/crown_templates/plainsCrown.jpg')
 
+# ... then package the templates into a list
 templates =[swamp_template,forest_template,mine_template,ocean_template,field_template,grass_template]
 
 
