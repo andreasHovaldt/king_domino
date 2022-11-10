@@ -20,25 +20,20 @@ def main():
 
     
     # Display full image
-    cv2.imshow('fullimg', img)
+    cv2.imshow('Board', img)
     cv2.waitKey(0)
-    cv2.destroyAllWindows()
     
     # Initiate class object 
-    cd = CrownDetect(img)
-    print(cd.boxes)
-    
-    
-    # Run class function to detect crowns on image
-    print(cd.findCrowns(templates,0.6)) # <---- This apparently changes 'img'?
-    
-    
-    # Display the final image 
-    cv2.imshow("final1",cd.image)
-    cv2.imshow("final2",img)
+    cd = CrownDetect(img,templates,0.6)
+
+    # Run class functions to detect crowns and draw them on image
+    print(cd.countCrowns())
+    crownImg = cd.drawCrowns()
+    cv2.imshow('Board', crownImg)
+
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    
+
 
 if __name__ == "__main__":
     main()
