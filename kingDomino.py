@@ -1,7 +1,6 @@
 import cv2
 from kingDominoClasses import kingdom
 
-#Andreas version
 #Count king domino
 
 ###---------------------------- MAIN CODE ----------------------------###
