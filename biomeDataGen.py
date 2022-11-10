@@ -1,10 +1,17 @@
 import cv2
 import os
 import csv
-from dataFunctions import tile_feature_extraction, normalize_data
+from kingDominoFunctions import tile_feature_extraction, normalize_data
 
 
-# Declare directory paths to training tiles
+###### Declare directory paths to training tiles ######
+folder_path = "King Domino dataset/sorted_biome_tiles_simplified"
+biome_path_list = [
+    "field", "forest",
+    "mine", "ocean", "plains",
+    "start", "swamp", "table"
+]
+### Legacy method
 # folder_path = "King Domino dataset/sorted_biome_tiles"
 # biome_path_list = [
 #     "field", "field_house", "forest", "forest_house",
@@ -13,13 +20,6 @@ from dataFunctions import tile_feature_extraction, normalize_data
 #     "start_red", "start_red_castle", "start_yellow", "start_yellow_castle",
 #     "swamp", "swamp_house", "table"
 # ]
-
-folder_path = "King Domino dataset/sorted_biome_tiles_simplified"
-biome_path_list = [
-    "field", "forest",
-    "mine", "ocean", "plains",
-    "start", "swamp", "table"
-]
 
 
 
