@@ -19,42 +19,6 @@ def edgeDetection(image):
     #cv2.imshow("Image Blur", imageBlur)
     return imageCannyEdge
 
-# (Legacy, un-used) Detect crowns on image
-def crownDetection(image):
-    imageHSV = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    imageSaturation = imageHSV[:,:,1]
-    thresh, imageCrownThresh = cv2.threshold(imageSaturation,127,255,cv2.THRESH_BINARY)
-    
-    cv2.imshow("Image HSV", imageHSV)
-    cv2.imshow("Image Saturation", imageSaturation)
-    cv2.imshow("Image crown thresh", imageCrownThresh)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-# (Legacy, un-used) Compute amount of crowns on tile
-def computeCrowns(tile):
-    tileThing = tile #temporary code
-    #print("Computing crowns...")
-    return random.randrange(0,3,1)
-
-# (Legacy, un-used) Write image of each tile in given board array to the given path
-def writeBlurBoard(board_array, pathStr):
-    userInput = input(f"Write board tiles to {pathStr}? [y/n]: ")
-    
-    if (userInput == "y"):
-        for x in range(5):
-            for y in range(5):
-                tileBlur = cv2.GaussianBlur(board_array[y,x],(99,99),99)
-                cv2.imwrite(f"{pathStr}/{y}x{x}.png", tileBlur)
-        print("Board write done!")
-    
-    elif (userInput == "n"):
-        print("Board write cancelled!")
-    
-    else:
-        print("Unidentified response, trying again...")
-        writeBlurBoard(board_array, pathStr)
-
 
 def equalizeHistogram(image):
     '''
@@ -102,25 +66,6 @@ def segmentImage(image):
     return sliceList_nparray
 
 
-def getTileInfo (segmentList):
-    '''
-    Create dictionary with info for each tile of provided board
-    '''
-    tileInfoList = []
-
-    for y in range(5):
-        
-            tileInfoList.append([])
-        
-            for x in range(5):
-                biome = determineBiome(segmentList[y][x])
-                crowns = computeCrowns(segmentList[y][x])
-                
-                tileInfoList[y].append({"location":[y,x], "biome":biome, "crowns":crowns})
-    
-    return tileInfoList
-
-
 def writeBiomeText(boardImage):
     '''
     Predicts tile biomes of board and writes it on each tile
@@ -145,7 +90,6 @@ def writeBiomeText(boardImage):
     
     #returns the original board image with biome text on each tile 
     return outputImage
-
 
 
 
@@ -366,6 +310,17 @@ def predictionPrecisionTest(board_directory='King Domino dataset/untrained_board
     print(f"Precision = {(correct_predictions/total_predictions)*100}% -> {correct_predictions}/{total_predictions}")
 
 
+def loadCrownTemplates(crown_template_directory='King Domino dataset\crown_templates'):
+    '''
+    Loads in the crown templates and adds them to a list
+    '''
+    templates = []
+    for template in os.listdir(crown_template_directory):
+        templates.append(cv2.imread(f'King Domino dataset/crown_templates/{template}'))
+    
+    return templates
+
+
 
 ########### Declaring hue color samples ###########
 # Used to create lower and upper bounds for specfic hue ranges corresponding to yellow, green, blue and red
@@ -432,17 +387,9 @@ clf.fit(X=numpy_feature_data, y=numpy_biome_names)
 
 ########### Internal testing ###########
 def main():
-    #current_tile = cv2.imread("King Domino dataset/sorted_biome_tiles/mine/3.jpg")
-    #current_tile = cv2.imread("King Domino dataset/sorted_biome_tiles/plains/3.jpg")
-    #current_tile = cv2.imread("King Domino dataset/sorted_biome_tiles/forest/9.jpg")
-    #current_tile = cv2.imread("King Domino dataset/sorted_biome_tiles/ocean/4.jpg")
-    #current_tile = cv2.imread("King Domino dataset/sorted_biome_tiles/swamp/0.jpg")
-    #current_tile = cv2.imread("King Domino dataset/sorted_biome_tiles/field/0.jpg")
-
-    #print(determineBiome(current_tile))
-    
-    
+       
     predictionPrecisionTest()
+
 
 if __name__ == "__main__":
     main()
