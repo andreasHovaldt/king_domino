@@ -20,16 +20,19 @@ def main():
     
     ### Biome detection ###
     # Run class functions
-    board.showImage(pause=False)
     biome_image = board.biomeImage()
     #print(board.biomeArray())
     
     
     ### Crown detection ###
     # Run class functions to detect crowns and draw them on image
-    print(board.countCrowns())
+    print(f"The board contains {board.countCrowns()} crowns")
     crownImg = board.drawCrowns(biome_image)
     cv2.imshow('Board', crownImg)
+    
+    
+    
+    
     cv2.waitKey(0)
     cv2.destroyAllWindows()
     
