@@ -1,8 +1,6 @@
-from unittest import result
 import cv2
 import numpy as np
 from imutils.object_detection import non_max_suppression
-import matplotlib.pyplot as plt
 
 class CrownDetect:
 
@@ -11,7 +9,7 @@ class CrownDetect:
         self.image = image
     
     
-    # this function uses template matching to find the crowns          
+    # Function uses template matching to find crowns on self.image
     def detectCrown(self, template, threshold):
         '''
         Searches image for crown
