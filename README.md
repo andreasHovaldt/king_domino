@@ -4,3 +4,10 @@ A repsoitory for a mini project containing code to calculate the points in a gam
 Collaborators:
 * Andreas Højrup
 * Christoffer Christiansen
+
+Dependencies(pip install):
+* opencv-python
+* numpy
+* pandas
+* scikit-learn
+* imutils
