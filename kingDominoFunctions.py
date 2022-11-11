@@ -305,7 +305,7 @@ def predictionPrecisionTest(board_directory='King Domino dataset/untrained_board
         wrong_predictions += int(userInput)
         correct_predictions += 25 - int(userInput)
         total_predictions += 25
-    cv2.destroyAllWindows
+    cv2.destroyAllWindows()
 
     print(f"Precision = {(correct_predictions/total_predictions)*100}% -> {correct_predictions}/{total_predictions}")
 
