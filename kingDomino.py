@@ -1,6 +1,7 @@
 import cv2
+import numpy as np
 from kingDominoClasses import kingdom, CrownDetect
-from kingDominoFunctions import loadCrownTemplates
+from kingDominoFunctions import loadCrownTemplates, zipArrays
 #from CrownDetect import CrownDetect
      
     
@@ -15,24 +16,28 @@ def main():
     
     ### Define class ###
     board = kingdom(img4, crown_templates, 0.6)
-    board.showImage(pause=False)
+    #board.showImage(pause=False)
     
     
     ### Biome detection ###
     # Run class functions
-    biome_image = board.biomeImage()
-    #print(board.biomeArray())
+    #biome_image = board.biomeImage()
+    biomeArray = board.biomeArray()
+    print(biomeArray)
     
     
-    ### Crown detection ###
-    # Run class functions to detect crowns and draw them on image
-    print(f"The board contains {board.countCrowns()} crowns")
-    crownImg = board.drawCrowns(biome_image)
-    cv2.imshow('Board', crownImg)
+    # ### Crown detection ###
+    # # Run class functions to detect crowns and draw them on image
+    # print(f"The board contains {board.countCrownsFull()} crowns")
+    # crownImg = board.drawCrowns(biome_image)
+    # cv2.imshow('Board', crownImg)
+    crownArray = board.crownArray()
+    print(crownArray)
     
     
     
-    
+    np_arr = zipArrays(biomeArray,crownArray)
+    print(np_arr)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
     
@@ -42,6 +47,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
 
 
 

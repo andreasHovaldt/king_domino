@@ -8,31 +8,31 @@ from kingDominoFunctions import segmentImage, equalizeHistogram, tile_feature_ex
 
 
 
-def writeBoard(boardList, pathStr, board_num):
-    userInput = input(f"Write board tiles to {pathStr}? [y/n]: ")
+# def writeBoard(boardList, pathStr, board_num):
+#     userInput = input(f"Write board tiles to {pathStr}? [y/n]: ")
     
-    if (userInput == "y"):
-        for x in range(5):
-            for y in range(5):
-                cv2.imwrite(f"{pathStr}/{board_num}_{y}x{x}.jpg", boardList[y][x])
-        print("Board write done!")
+#     if (userInput == "y"):
+#         for x in range(5):
+#             for y in range(5):
+#                 cv2.imwrite(f"{pathStr}/{board_num}_{y}x{x}.jpg", boardList[y][x])
+#         print("Board write done!")
     
-    elif (userInput == "n"):
-        print("Board write cancelled!")
+#     elif (userInput == "n"):
+#         print("Board write cancelled!")
     
-    else:
-        print("Unidentified response, trying again...")
-        writeBoard(boardList, pathStr, board_num)
+#     else:
+#         print("Unidentified response, trying again...")
+#         writeBoard(boardList, pathStr, board_num)
 
 
-def determineBiome(tile):
-    return 'biome name'
+# def determineBiome(tile):
+#     return 'biome name'
     
 def main():
-    img12 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/12.jpg")
+    #img12 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/12.jpg")
     
-    
-    
+    arr = np.array([[1,0,1,0,0], [0,0,1,1,0], [0,0,0,1,1], [0,0,0,0,1], [1,1,0,0,0]])
+    print(arr)
     
     return
     

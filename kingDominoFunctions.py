@@ -321,6 +321,17 @@ def loadCrownTemplates(crown_template_directory='King Domino dataset\crown_templ
     return templates
 
 
+def zipArrays(array1, array2):
+    '''Zip together two arrays of same size'''
+    full_zip_array = []
+    for y in range(array1.shape[0]):
+        y_zip_array = []
+        for val1,val2 in zip(array1[y,:],array2[y,:]):
+            y_zip_array.append([val1,val2])
+        full_zip_array.append(y_zip_array)
+    np_arr = np.array(full_zip_array)
+    return np_arr
+
 
 ########### Declaring hue color samples ###########
 # Used to create lower and upper bounds for specfic hue ranges corresponding to yellow, green, blue and red

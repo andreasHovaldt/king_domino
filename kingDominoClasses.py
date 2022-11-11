@@ -67,15 +67,16 @@ class kingdom:
         #Convert list with lists to numpy array
         biome_name_nparray = np.array([biome_name_list[0], biome_name_list[1], biome_name_list[2], biome_name_list[3], biome_name_list[4]])
         return biome_name_nparray
-    
-    
+
+        
     ###---------------------------- Crown detection ----------------------------###
     
-    def __detectCrown(self):
+    def __detectCrown(self, image):
         '''
         !! Private method, cannot be called outside of class !!\n
         Searches image for crowns using the templates given in a list
         '''
+        boxes = []
         template_list = self.crown_template_list
         
         # For loop goes through all templates in the template list
@@ -96,7 +97,7 @@ class kingdom:
 
             for i in range(len(template_array)):
                 # the built in template matching function is used
-                res1 = cv2.matchTemplate(np.copy(self.image),template_array[i],cv2.TM_CCOEFF_NORMED)
+                res1 = cv2.matchTemplate(np.copy(image),template_array[i],cv2.TM_CCOEFF_NORMED)
 
                 # the x,y position for where the result is higher than the threshold is saved
                 (y_points,x_points) = np.where(res1 >= self.crown_treshold)
@@ -106,33 +107,71 @@ class kingdom:
 
                 # following for loop saves x,y-position as a tuple and iterates through the list of positions and appends boxes correlating to each position
                 for(x,y) in zip(x_points, y_points):
-                    self.boxes.append((x, y, x+w, y+h))
+                    boxes.append((x, y, x+w, y+h))
         
         # Uses non_max_supression on crown boxes to avoid detecting the same crown multiple times
-        self.boxes = non_max_suppression(np.array(self.boxes))
+        boxes = non_max_suppression(np.array(boxes))
+        return boxes
         
 
-    def countCrowns(self):
+    def countCrownsFull(self, reset_boxes=False):
         '''
         Counts crowns and returns amount as an [int]
         '''
+        # Used if you want to re-compute amount of crowns
+        if reset_boxes == True:
+            self.boxes = []
+        
         # Runs detectCrown() function to find crowns, only if it has not been run before
         if len(self.boxes) == 0:
-            self.__detectCrown()
+            self.boxes = self.__detectCrown(self.image)
         
         # Returns number of detected crowns
-        self.hello = 'hello!'
         return len(self.boxes)
     
     
-    def drawCrowns(self, image):
+    def countCrownsTile(self, tile):
+        '''
+        Counts crowns of given tile and returns amount as an [int]
+        '''
+        # Runs detectCrown() function to find crowns
+        boxes = self.__detectCrown(tile)
+        
+        # Returns number of detected crowns
+        return len(boxes)
+    
+    
+    def crownArray(self):
+        '''Returns 5x5 array with biomes corresponding to crown layout on board'''
+        tiles = self.tile_array
+        
+        # Create empty np array with same width and height dimensions as tile array 
+        crown_np_array = np.zeros((tiles.shape[:2]))
+        
+        for y in range(tiles.shape[0]):
+            for x in range(tiles.shape[1]):
+                # Set current tile
+                current_tile = tiles[y,x]
+                # Count crowns of tiles
+                crown_num = self.countCrownsTile(current_tile)
+                # Set crown number in np array
+                crown_np_array[y,x] = crown_num
+        
+        return crown_np_array
+    
+    
+    def drawCrowns(self, image, reset_boxes=False):
         '''
         Draws rectangles around all crowns\n
         Returns image with drawn crowns
         '''
+        # Used if you want to re-compute amount of crowns
+        if reset_boxes == True:
+            self.boxes = []
+        
         # Runs detectCrown() function to find crowns, only if it has not been run before
         if len(self.boxes) == 0:
-            self.__detectCrown()
+            self.__detectCrown(self.image)
         
         # Draws rectangles on the image corresponding to the crowns
         crown_image = np.copy(image)
