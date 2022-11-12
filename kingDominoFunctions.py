@@ -4,7 +4,11 @@ import pandas as pd
 import os
 from sklearn.neighbors import KNeighborsClassifier
 
+from collections import deque
 import random #Needs to be removed -> Used in computeCrowns() for testing
+
+burn_queue = deque([])
+
 
 
 ###---------------------------- kingDominoFunctions ----------------------------###
@@ -393,6 +397,73 @@ k = 3
 # Classifier is used for predicting new tile biomes in determineBiome() function
 clf = KNeighborsClassifier(n_neighbors=k, weights="uniform", algorithm="brute")
 clf.fit(X=numpy_feature_data, y=numpy_biome_names)
+
+
+############## grass fire functions ################
+
+
+#first function is to identify which pixels the fire should spread to after lit
+def identifyIgnition(currentPixel,inputImage):
+
+    #we parse the current pixel to the function
+    [y,x] = currentPixel
+    
+    #we then define our kernel remember that we have to go backwards through it so when compared to the
+    #text book we go 4,3,2,1.  Each entry in this list is representative of a pixel
+    kernel = [[y-1,x],[y,x-1],[y+1,x],[y,x+1]]
+
+    #we go through the pixels in our kernel list
+    for pixel in kernel:
+        try:
+        #if the pixel is part of the object/white we append it's coordinates to the queue
+            if pixel[0] >= 0 and pixel[1] >= 0: 
+                if inputImage[[pixel[0],pixel[1]],0] == current_biome:
+                    burn_queue.append(pixel)
+                    inputImage[pixel[0],pixel[1]] = 0
+        except IndexError:
+            print ('out of bounds')
+    
+current_id = 1
+
+#following function is used to set the pixel values to either 1 or 0 
+def ignite(currentPixel, inputImage,blob_list):
+
+    
+    
+    [y,x] = currentPixel
+    
+    #we burn the input image
+    inputImage[y,x] = 0
+
+    #we assign the output image according to the current blob value 
+    output_img[y,x] = current_id
+
+
+    #we then call the function to identify the pixels around the current pixel being burned
+    identifyIgnition([y,x],inputImage)
+
+    #append the FIRST pixel to a list keeping track of all pixels in the blob
+    blob_list.append(currentPixel)
+
+    #we go through the pixels added to the burn queue by the IdentifyIgnition function
+    while len(burn_queue) > 0:
+        #use pop to remove the last pixel in the deque and assing it to a variable
+        pixel = burn_queue.pop()
+
+        
+
+        #burn the pixel in the image at the coordinates in the burn_queue
+        inputImage[pixel[0],pixel[1]] = 0
+
+        #assign the pixel in output (at the coordinates in the burn_queue) according to the current_id 
+        output_img[pixel[0],pixel[1]] = current_id
+        
+        #append the pixel to a list keeping track of all pixels in the blob
+        blob_list.append(pixel)
+
+        #identify if any adjacent pixels are to be burned
+        identifyIgnition(pixel,inputImage)
+
 
 
 
