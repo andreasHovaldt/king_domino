@@ -14,7 +14,7 @@ from kingDominoFunctions import loadCrownTemplates, zipArrays
 def main():
     ### Loading Whole Boards ###
     img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/4.jpg")
-    img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/6.jpg")
+    img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/31.jpg")
 
     crown_templates = loadCrownTemplates()
    
