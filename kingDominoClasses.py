@@ -2,14 +2,14 @@ import cv2
 import numpy as np
 
 from imutils.object_detection import non_max_suppression
-from kingDominoFunctions import writeBiomeText, segmentImage, determineBiome
+import kingDominoFunctions as kdf
 
 ###---------------------------- Classes ----------------------------###
 class kingdom:
     '''
     General functions:\n
     * showImage() -> Displays board image
-    * getPoints() -> (Not operational) Calculate points
+    * getPoints() -> Returns total points of board
     \n
     Biome functions:\n
     * biomeImage() -> Returns board image with biomes written on tiles
@@ -17,18 +17,21 @@ class kingdom:
     * biomeArray() -> Returns 5x5 NDArray with biomes corresponding to tile layout on board
     \n
     Crown functions:\n
-    * countCrowns() -> Counts crowns and returns amount as an [int]
+    * countCrownsFull() -> Counts crowns of full board and returns amount as an [int]
+    * countCrownsTile() -> Counts crowns of given tile and returns amount as an [int]
+    * crownArray() -> Returns 5x5 array with amount of crowns corresponding to each tile on the board
     * drawCrowns() -> Returns image with drawn crowns
     '''
     
     def __init__(self, image, crown_template_list, crown_treshold):
         self.image = image
-        self.tile_array = segmentImage(image)
+        self.tile_array = kdf.segmentImage(image)
 
         #-- Crown detection --#
         self.boxes = []
         self.crown_template_list = crown_template_list
         self.crown_treshold = crown_treshold
+        self.biome_types = ['field','forest','mine','ocean','plains','swamp','start']
     
     def showImage(self, pause=True):
         '''Displays board image'''
@@ -38,13 +41,67 @@ class kingdom:
             cv2.destroyAllWindows()
     
     def getPoints(self):
-        #Calculate points
-        pass
+        '''Calculate total points of board'''
+        
+        # Create 5x5 array with biomes of board
+        biome_array = self.biomeArray()
+        
+        # Create empty list used for saving board blobs
+        blob_array = []
+        
+        # For every biome type, blob detection is done
+        for current_biome in self.biome_types:
+            
+            # Creates empty 5x5 array
+            current_biome_array = np.zeros_like(biome_array, dtype=np.uint8)
+
+            # Create binary array for the current biome
+            for y in range(biome_array.shape[0]):
+                for x in range(biome_array.shape[1]):
+                    if biome_array[y,x] == current_biome:
+                        current_biome_array[y,x] = 1
+
+            # Apply connected component analysis on current biome binary array
+            biome_blobs = kdf.connectedCompAnalysis(current_biome_array)
+
+            # Extend list with all found biome blobs
+            blob_array.extend(biome_blobs)
+
+        
+        # Currently we have acquired a list containing all biome blobs on the board
+        # Now, crowns for each blob will be counted, then culculate the points for each blob
+        # Lastly add all points for all blobs together
+        
+        # Declare variable for total score
+        total_score = 0
+        
+        # For every blob in the blob_array
+        for blob_number in range(len(blob_array)):
+            
+            # Define the current blob which is being calculated
+            current_blob = blob_array[blob_number]
+            
+            # Declare variable for counting crowns in the current blob
+            current_blob_crowns = 0
+            
+            # For every tile in current_blob
+            for current_tile in current_blob:
+
+                current_blob_crowns += self.countCrownsTile(self.tile_array[current_tile[0],current_tile[1]])
+
+            # Calculate score for current blob
+            blob_score = len(current_blob) * current_blob_crowns
+            
+            # Add current blob score to total score
+            total_score += blob_score
+        
+        # Return total score
+        return total_score
     
     ###---------------------------- Biome prediction ----------------------------###
     def biomeImage(self):
         '''Returns board image with biomes written on tiles'''
-        biome_name_img = writeBiomeText(self.image)
+        biome_name_img = kdf.writeBiomeText(self.image)
         return biome_name_img
     
     def biomeImageShow(self, pause=True):
@@ -62,7 +119,7 @@ class kingdom:
         for y in range(tiles.shape[0]): #5
             biome_name_list.append([])
             for x in range(tiles.shape[1]): #5
-                biome = determineBiome(tiles[y,x])
+                biome = kdf.determineBiome(tiles[y,x])
                 biome_name_list[y].append(biome)
         #Convert list with lists to numpy array
         biome_name_nparray = np.array([biome_name_list[0], biome_name_list[1], biome_name_list[2], biome_name_list[3], biome_name_list[4]])
@@ -116,7 +173,7 @@ class kingdom:
 
     def countCrownsFull(self, reset_boxes=False):
         '''
-        Counts crowns and returns amount as an [int]
+        Counts crowns of full board and returns amount as an [int]
         '''
         # Used if you want to re-compute amount of crowns
         if reset_boxes == True:
@@ -142,7 +199,7 @@ class kingdom:
     
     
     def crownArray(self):
-        '''Returns 5x5 array with biomes corresponding to crown layout on board'''
+        '''Returns 5x5 array with amount of crowns corresponding to each tile on the board'''
         tiles = self.tile_array
         
         # Create empty np array with same width and height dimensions as tile array 
@@ -184,7 +241,7 @@ class kingdom:
     
     
 
-
+### Un-used, was combined into kingdom class, saved just in case it was needed
 class CrownDetect:
     '''
     Crown functions:\n

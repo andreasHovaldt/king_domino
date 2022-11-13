@@ -4,7 +4,6 @@ import pandas as pd
 import os
 from sklearn.neighbors import KNeighborsClassifier
 
-import random #Needs to be removed -> Used in computeCrowns() for testing
 
 
 ###---------------------------- kingDominoFunctions ----------------------------###
@@ -320,7 +319,7 @@ def loadCrownTemplates(crown_template_directory='King Domino dataset\crown_templ
     
     return templates
 
-
+# Un-used
 def zipArrays(array1, array2):
     '''Zip together two arrays of same size'''
     full_zip_array = []
@@ -331,6 +330,75 @@ def zipArrays(array1, array2):
         full_zip_array.append(y_zip_array)
     np_arr = np.array(full_zip_array)
     return np_arr
+
+
+###---------------------------- Connected component analysis ----------------------------###
+
+def apply_kernel(pixelCurrent, image):  
+    '''
+    Applies kernel on given image centered around the given pixel\n
+    Returns list with kernel hits
+    '''
+    # Declare list for storing pixels the kernel hits
+    temp_burn_queue = []
+    
+    # Declare y,x for current pixel
+    [y,x] = pixelCurrent
+    
+    # Declare the kernel
+    pixels_to_check = [[y-1,x], [y,x-1], [y+1,x], [y,x+1]]
+    
+    # Apply the kernel
+    for pixel in pixels_to_check:
+        try: # Checks if the kernel is applied outside of the image
+            if pixel[0] >= 0 and pixel[1] >= 0:
+                if image[pixel[0], pixel[1]] > 0:
+                    image[pixel[0], pixel[1]] = 0
+                    temp_burn_queue.append([pixel[0], pixel[1]])
+        except:
+            continue
+    return temp_burn_queue
+
+
+def grass_fire(pixel, input_image):
+    
+    input_image[pixel[0], pixel[1]] = 0
+    
+    burn_queue = []
+    blob_array = [pixel]
+    
+    #Put kernel on pixel, receive pixels hits
+    extension_array = apply_kernel(pixel, input_image)
+    burn_queue.extend(extension_array)
+    blob_array.extend(extension_array)
+    
+    
+    while len(burn_queue) > 0:
+        current_pixel = burn_queue.pop()
+        
+        input_image[current_pixel[0], current_pixel[1]] = 0
+        
+        #Put kernel on pixel, receive pixels hits
+        extension_array = apply_kernel(current_pixel, input_image)
+        burn_queue.extend(extension_array)
+        blob_array.extend(extension_array)
+    
+    return input_image, blob_array
+
+
+def connectedCompAnalysis(binary_image):
+    
+    heigth, width = binary_image.shape[:2]
+    
+    blob_arrays = []
+    for y in range(heigth):
+        for x in range(width):
+            if binary_image[y,x] > 0:
+                binary_image, array = grass_fire([y,x], binary_image)
+                blob_arrays.append(array)
+
+    return blob_arrays
+
 
 
 ########### Declaring hue color samples ###########
@@ -375,14 +443,14 @@ feature_list = data.columns[0:len(data.columns) - 1]
 ########### Making training data compatible with sklearn KNeighborsClassifier ###########
 # To make our data compatible, it is desired to seperate our ground truths from our feature vectors.
 # Thus we want an array with ground truths, and an array with feature vectors
-# Note: ground truth 'n' in its array should correspond to feature vector 'n' in the feature array
+# Note: ground truth 'n', in its array, should correspond to feature vector 'n', in the feature array
 
 # Seperate name column from data and convert 'DataFrame' type to numpy array
 biome_names = data_normalized.pop('Biome name')
 numpy_biome_names = biome_names.to_numpy()
 
 # Convert data to numpy array and remove redundant first column (First column only corresponds to the index of the rows)
-'''Need to look into normalization since it might be the cause of this redundant column'''
+# TODO: Need to look into the normalization since it might be the cause of this redundant column
 numpy_feature_data = data_normalized.to_numpy()
 numpy_feature_data = numpy_feature_data[:, 1:numpy_feature_data.shape[1]]
 
@@ -398,7 +466,6 @@ clf.fit(X=numpy_feature_data, y=numpy_biome_names)
 
 ########### Internal testing ###########
 def main():
-       
     predictionPrecisionTest()
 
 

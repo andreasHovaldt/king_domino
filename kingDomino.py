@@ -1,61 +1,44 @@
 import cv2
-import numpy as np
-from kingDominoClasses import kingdom, CrownDetect
-from kingDominoFunctions import loadCrownTemplates, zipArrays
-#from CrownDetect import CrownDetect
+from kingDominoClasses import kingdom
+from kingDominoFunctions import loadCrownTemplates
      
     
 ###---------------------------- MAIN CODE ----------------------------###
 def main():
     ### Loading Whole Boards ###
     img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/4.jpg")
-    img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/6.jpg")
+    img6 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/6.jpg")
 
     crown_templates = loadCrownTemplates()
    
+
+    ### Define kingdom object for board 4 ###
+    board_4 = kingdom(img4, crown_templates, 0.6)
     
-    ### Define class ###
-    board = kingdom(img4, crown_templates, 0.6)
-    #board.showImage(pause=False)
+    ### Show board 4 
+    # board_4.showImage()
+    img4_biomes = board_4.biomeImage()
+    img4_analyzed = board_4.drawCrowns(img4_biomes)
+    cv2.imshow("img4_analyzed", img4_analyzed)
     
-    
-    ### Biome detection ###
-    # Run class functions
-    #biome_image = board.biomeImage()
-    biomeArray = board.biomeArray()
-    print(biomeArray)
-    
-    
-    # ### Crown detection ###
-    # # Run class functions to detect crowns and draw them on image
-    # print(f"The board contains {board.countCrownsFull()} crowns")
-    # crownImg = board.drawCrowns(biome_image)
-    # cv2.imshow('Board', crownImg)
-    crownArray = board.crownArray()
-    print(crownArray)
+    ### Get board 4 points
+    print(f"Board 4 points: {board_4.getPoints()}")
     
     
     
-    np_arr = zipArrays(biomeArray,crownArray)
-    print(np_arr)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    ### Define kingdom object for board 6 ###
+    board_6 = kingdom(img6, crown_templates, 0.6)
     
+    ### Show board
+    # board_6.showImage()
+    img6_biomes = board_6.biomeImage()
+    img6_analyzed = board_6.drawCrowns(img6_biomes)
+    cv2.imshow("img6_analyzed", img6_analyzed)
     
+    ## Get board 6 points
+    print(f"Board 6 points: {board_6.getPoints()}")
 
 
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-# look into this: https://techvidvan.com/tutorials/detect-objects-of-similar-color-using-opencv-in-python/
-
-
-
-
-
-
