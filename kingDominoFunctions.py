@@ -91,6 +91,79 @@ def writeBiomeText(boardImage):
     return outputImage
 
 
+def writeBiomeAndShow(board_filename, board_directory, pause=True):
+        '''
+        Predicts and writes biome on each tile of board, then displays it
+            Parameters:
+                board_filename (str): Full file name of board
+                board_directory (str): Directory path to folder with board_filename
+        '''
+        print(f"Processing board [{board_filename}]...")
+        board = cv2.imread(f"{board_directory}/{board_filename}")
+        board_biomes = writeBiomeText(board)
+        cv2.imshow(f"Board [{board_filename}] with biome prediction", board_biomes)
+        if pause == True:
+            cv2.waitKey()
+            cv2.destroyAllWindows()
+
+
+def determineBiome(tile):
+    '''
+    Computes the biome of given tile\n
+        Parameters:
+            tile (mat): Tile image[BGR]
+            returns (str): Biome prediction
+    '''
+    
+    # Extract features from tile
+    features = tile_feature_extraction(tile)
+    
+    # Normalize features
+    features_normalized = normalizeTileFeatures(features,feature_list,100,data_max,data_min)
+    
+    # Convert feature dict to list
+    features_normalized_list = [features_normalized["Hue mean"], features_normalized["Yellow"], 
+                               features_normalized["Red"], features_normalized["Green"], 
+                               features_normalized["Blue"], features_normalized["Saturation"],
+                               features_normalized["RedEQ"], features_normalized["GreenEQ"],
+                               features_normalized["BlueEQ"]]
+    
+    # Predict biome type
+    biome_prediction = clf.predict([features_normalized_list])
+    
+    return biome_prediction[0]
+
+
+def predictionPrecisionTest(board_directory='King Domino dataset/untrained_boards'):
+    '''
+    Goes trough all boards in given directory one at a time.\n
+    Predicts and writes biome on each tile of board, then displays it.\n
+    Afterwards asks for user input in terminal for amount of wrong biome predictions.\n
+    When through all boards in directory, calculates and prints precision of biome predictions.\n
+    Press 'ESC' to exit prematurely.
+        
+        Parameters:
+            board_directory (str): Path to folder with boards for testing on (default='King Domino dataset/untrained_boards')
+    '''
+    untrained_boards_list = os.listdir(board_directory)
+    wrong_predictions = 0
+    correct_predictions = 0
+    total_predictions = 0
+    for board in untrained_boards_list:
+        writeBiomeAndShow(board, board_directory, False)
+        key = cv2.waitKey()
+        if key == 27: # ESC
+            break
+        cv2.destroyAllWindows()
+        userInput = input(f"How many wrong predictions? [int]: ")
+        wrong_predictions += int(userInput)
+        correct_predictions += 25 - int(userInput)
+        total_predictions += 25
+    cv2.destroyAllWindows()
+
+    print(f"Precision = {(correct_predictions/total_predictions)*100}% -> {correct_predictions}/{total_predictions}")
+
+
 
 ###---------------------------- dataFunctions ----------------------------###
 
@@ -202,8 +275,8 @@ def normalize_data(max_norm_val, data_path, output_path):
 
         # Applies function to the specified feature collumn
         data[f'{feature}'] = data[f'{feature}'].apply(lambda x: max_norm_val/(max_val-min_val) * (x-min_val))
-
-    data.to_csv(f"{output_path}")
+    
+    data.to_csv(f"{output_path}", index=False)
 
 
 def normalizeValue(value, max_norm_val, max_val, min_val):
@@ -234,79 +307,6 @@ def normalizeTileFeatures(tile_feature_dict, feature_list, max_norm_val, max_val
         tile_feature_dict[f'{feature}'] = normalizeValue(tile_feature_dict[f'{feature}'], max_norm_val, max_val, min_val)
     
     return tile_feature_dict
-
-
-def determineBiome(tile):
-    '''
-    Computes the biome of given tile\n
-        Parameters:
-            tile (mat): Tile image[BGR]
-            returns (str): Biome prediction
-    '''
-    
-    # Extract features from tile
-    features = tile_feature_extraction(tile)
-    
-    # Normalize features
-    features_normalized = normalizeTileFeatures(features,feature_list,100,data_max,data_min)
-    
-    # Convert feature dict to list
-    features_normalized_list = [features_normalized["Hue mean"], features_normalized["Yellow"], 
-                               features_normalized["Red"], features_normalized["Green"], 
-                               features_normalized["Blue"], features_normalized["Saturation"],
-                               features_normalized["RedEQ"], features_normalized["GreenEQ"],
-                               features_normalized["BlueEQ"]]
-    
-    # Predict biome type
-    biome_prediction = clf.predict([features_normalized_list])
-    
-    return biome_prediction[0]
-
-
-def writeBiomeAndShow(board_filename, board_directory, pause=True):
-        '''
-        Predicts and writes biome on each tile of board, then displays it
-            Parameters:
-                board_filename (str): Full file name of board
-                board_directory (str): Directory path to folder with board_filename
-        '''
-        print(f"Processing board [{board_filename}]...")
-        board = cv2.imread(f"{board_directory}/{board_filename}")
-        board_biomes = writeBiomeText(board)
-        cv2.imshow(f"Board [{board_filename}] with biome prediction", board_biomes)
-        if pause == True:
-            cv2.waitKey()
-            cv2.destroyAllWindows()
-
-
-def predictionPrecisionTest(board_directory='King Domino dataset/untrained_boards'):
-    '''
-    Goes trough all boards in given directory one at a time.\n
-    Predicts and writes biome on each tile of board, then displays it.\n
-    Afterwards asks for user input in terminal for amount of wrong biome predictions.\n
-    When through all boards in directory, calculates and prints precision of biome predictions.\n
-    Press 'ESC' to exit prematurely.
-        
-        Parameters:
-            board_directory (str): Path to folder with boards for testing on (default='King Domino dataset/untrained_boards')
-    '''
-    untrained_boards_list = os.listdir(board_directory)
-    wrong_predictions = 0
-    correct_predictions = 0
-    total_predictions = 0
-    for board in untrained_boards_list:
-        writeBiomeAndShow(board, board_directory, False)
-        key = cv2.waitKey()
-        if key == 27: # ESC
-            break
-        cv2.destroyAllWindows()
-        userInput = input(f"How many wrong predictions? [int]: ")
-        wrong_predictions += int(userInput)
-        correct_predictions += 25 - int(userInput)
-        total_predictions += 25
-    cv2.destroyAllWindows()
-
-    print(f"Precision = {(correct_predictions/total_predictions)*100}% -> {correct_predictions}/{total_predictions}")
 
 
 def loadCrownTemplates(crown_template_directory='King Domino dataset/crown_templates'):
@@ -449,10 +449,8 @@ feature_list = data.columns[0:len(data.columns) - 1]
 biome_names = data_normalized.pop('Biome name')
 numpy_biome_names = biome_names.to_numpy()
 
-# Convert data to numpy array and remove redundant first column (First column only corresponds to the index of the rows)
-# TODO: Need to look into the normalization since it might be the cause of this redundant column
+# Convert data to numpy array
 numpy_feature_data = data_normalized.to_numpy()
-numpy_feature_data = numpy_feature_data[:, 1:numpy_feature_data.shape[1]]
 
 
 ########### Create k-nearest-neighbor classifier ###########

@@ -6,35 +6,34 @@ from kingDominoClasses import kingdom
 def main():
     
     ### Loading Whole Boards ###
-    img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/4.jpg")
+    img20 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/20.jpg")
     img6 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/6.jpg")
    
 
     ### Define kingdom object for board 4 ###
-    board_4 = kingdom(img4)
+    board_20 = kingdom(img20)
     
-    ### Show board 4 
-    # board_4.showImage()
-    img4_biomes = board_4.biomeImage()
-    img4_analyzed = board_4.drawCrowns(img4_biomes)
-    cv2.imshow("img4_analyzed", img4_analyzed)
+    ### Show board 20 
+    # board_20.showImage()
+    img20_biomes = board_20.biomeImage()
+    img20_analyzed = board_20.drawCrowns(img20_biomes)
+    cv2.imshow("img20_analyzed", img20_analyzed)
     
-    ### Get board 4 points
-    print(f"Board 4 points: {board_4.getPoints()}")
+    ### Get board 20 points
+    print(f"Board 20 points: {board_20.getPoints()}")
+
     
+    # ### Define kingdom object for board 6 ###
+    # board_6 = kingdom(img6)
     
+    # ### Show board
+    # # board_6.showImage()
+    # img6_biomes = board_6.biomeImage()
+    # img6_analyzed = board_6.drawCrowns(img6_biomes)
+    # cv2.imshow("img6_analyzed", img6_analyzed)
     
-    ### Define kingdom object for board 6 ###
-    board_6 = kingdom(img6)
-    
-    ### Show board
-    # board_6.showImage()
-    img6_biomes = board_6.biomeImage()
-    img6_analyzed = board_6.drawCrowns(img6_biomes)
-    cv2.imshow("img6_analyzed", img6_analyzed)
-    
-    ## Get board 6 points
-    print(f"Board 6 points: {board_6.getPoints()}")
+    # ## Get board 6 points
+    # print(f"Board 6 points: {board_6.getPoints()}")
 
 
 if __name__ == "__main__":

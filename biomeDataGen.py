@@ -11,15 +11,6 @@ biome_path_list = [
     "mine", "ocean", "plains",
     "start", "swamp", "table"
 ]
-### Legacy method
-# folder_path = "King Domino dataset/sorted_biome_tiles"
-# biome_path_list = [
-#     "field", "field_house", "forest", "forest_house",
-#     "mine", "ocean", "ocean_house", "plains", "plains_house",
-#     "start_blue", "start_blue_castle", "start_green", "start_green_castle",
-#     "start_red", "start_red_castle", "start_yellow", "start_yellow_castle",
-#     "swamp", "swamp_house", "table"
-# ]
 
 
 
@@ -54,8 +45,6 @@ for biome_name in biome_path_list:
                                    tile_feature_dict["Blue"], tile_feature_dict["Saturation"],
                                    tile_feature_dict["RedEQ"], tile_feature_dict["GreenEQ"], 
                                    tile_feature_dict["BlueEQ"], biome_name])
-    
-print("Done processing dataset!")
 
 
 
@@ -73,7 +62,10 @@ with open('biome_data.csv', 'w') as file:
     writer.writerows(biome_feature_list)
 
 # Normalize data
+print("Normalizing dataset!")
 normalize_max_val = 100
 normalize_data(normalize_max_val, "biome_data.csv", "biome_data_normalized.csv")
+
+print("Done processing dataset!")
 
 
