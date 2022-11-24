@@ -309,7 +309,7 @@ def predictionPrecisionTest(board_directory='King Domino dataset/untrained_board
     print(f"Precision = {(correct_predictions/total_predictions)*100}% -> {correct_predictions}/{total_predictions}")
 
 
-def loadCrownTemplates(crown_template_directory='King Domino dataset\crown_templates'):
+def loadCrownTemplates(crown_template_directory='King Domino dataset/crown_templates'):
     '''
     Loads in the crown templates and adds them to a list
     '''

@@ -1,19 +1,17 @@
 import cv2
 from kingDominoClasses import kingdom
-from kingDominoFunctions import loadCrownTemplates
      
     
 ###---------------------------- MAIN CODE ----------------------------###
 def main():
+    
     ### Loading Whole Boards ###
     img4 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/4.jpg")
     img6 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/6.jpg")
-
-    crown_templates = loadCrownTemplates()
    
 
     ### Define kingdom object for board 4 ###
-    board_4 = kingdom(img4, crown_templates, 0.6)
+    board_4 = kingdom(img4)
     
     ### Show board 4 
     # board_4.showImage()
@@ -27,7 +25,7 @@ def main():
     
     
     ### Define kingdom object for board 6 ###
-    board_6 = kingdom(img6, crown_templates, 0.6)
+    board_6 = kingdom(img6)
     
     ### Show board
     # board_6.showImage()
@@ -39,6 +37,7 @@ def main():
     print(f"Board 6 points: {board_6.getPoints()}")
 
 
-
 if __name__ == "__main__":
     main()
+    cv2.waitKey()
+    cv2.destroyAllWindows()

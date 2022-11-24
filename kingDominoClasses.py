@@ -23,14 +23,14 @@ class kingdom:
     * drawCrowns() -> Returns image with drawn crowns
     '''
     
-    def __init__(self, image, crown_template_list, crown_treshold):
+    def __init__(self, image):
         self.image = image
         self.tile_array = kdf.segmentImage(image)
 
         #-- Crown detection --#
         self.boxes = []
-        self.crown_template_list = crown_template_list
-        self.crown_treshold = crown_treshold
+        self.crown_template_list = kdf.loadCrownTemplates()
+        self.crown_treshold = 0.6 # Found through trial and error
         self.biome_types = ['field','forest','mine','ocean','plains','swamp','start']
     
     def showImage(self, pause=True):
@@ -228,7 +228,7 @@ class kingdom:
         
         # Runs detectCrown() function to find crowns, only if it has not been run before
         if len(self.boxes) == 0:
-            self.__detectCrown(self.image)
+            self.boxes = self.__detectCrown(self.image)
         
         # Draws rectangles on the image corresponding to the crowns
         crown_image = np.copy(image)
