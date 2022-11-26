@@ -7,7 +7,7 @@ def main():
     
     ### Loading Whole Boards ###
     img20 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/20.jpg")
-    img6 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/6.jpg")
+    # img6 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/6.jpg")
    
 
     ### Define kingdom object for board 4 ###
@@ -34,6 +34,7 @@ def main():
     
     # ## Get board 6 points
     # print(f"Board 6 points: {board_6.getPoints()}")
+    
 
 
 if __name__ == "__main__":
