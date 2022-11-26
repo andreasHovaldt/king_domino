@@ -30,7 +30,7 @@ class kingdom:
         #-- Crown detection --#
         self.boxes = []
         self.crown_template_list = kdf.loadCrownTemplates()
-        self.crown_treshold = 0.6 # Found through trial and error
+        self.crown_treshold = 0.7 # Found through trial and error
         self.biome_types = ['field','forest','mine','ocean','plains','swamp','start']
     
     def showImage(self, pause=True):
