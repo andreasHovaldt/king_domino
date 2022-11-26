@@ -5,22 +5,22 @@ from kingDominoClasses import kingdom
 ###---------------------------- MAIN CODE ----------------------------###
 def main():
     
-    # ### Loading Whole Boards ###
-    # img20 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/20.jpg")
-    # img6 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/6.jpg")
+    ### Loading Whole Boards ###
+    img20 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/20.jpg")
+    img6 = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/6.jpg")
    
 
-    # ### Define kingdom object for board 4 ###
-    # board_20 = kingdom(img20)
+    ### Define kingdom object for board 4 ###
+    board_20 = kingdom(img20)
     
-    # ### Show board 20 
-    # # board_20.showImage()
-    # img20_biomes = board_20.biomeImage()
-    # img20_analyzed = board_20.drawCrowns(img20_biomes)
-    # cv2.imshow("img20_analyzed", img20_analyzed)
+    ### Show board 20 
+    # board_20.showImage()
+    img20_biomes = board_20.biomeImage()
+    img20_analyzed = board_20.drawCrowns(img20_biomes)
+    cv2.imshow("img20_analyzed", img20_analyzed)
     
-    # ### Get board 20 points
-    # print(f"Board 20 points: {board_20.getPoints()}")
+    ### Get board 20 points
+    print(f"Board 20 points: {board_20.getPoints()}")
 
     
     # ### Define kingdom object for board 6 ###
@@ -34,7 +34,9 @@ def main():
     
     # ## Get board 6 points
     # print(f"Board 6 points: {board_6.getPoints()}")
-    
+
+
+def crownPrecision():
     import os
     
     total_crowns = 0
@@ -57,10 +59,10 @@ def main():
     print(f"total_crowns: {total_crowns}")
     print(f"true_crowns: {true_crowns}")
     print(f"false_crowns: {false_crowns}")
-    
 
 
 if __name__ == "__main__":
     main()
+    #crownPrecision()
     cv2.waitKey()
     cv2.destroyAllWindows()
