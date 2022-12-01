@@ -12,8 +12,7 @@ class kingdom:
     * getPoints() -> Returns total points of board
     \n
     Biome functions:\n
-    * biomeImage() -> Returns board image with biomes written on tiles
-    * biomeImageShow() -> Displays board image with biomes written on tiles
+    * biomeImage() -> Returns board image with biomes written on tiles, optional show image
     * biomeArray() -> Returns 5x5 NDArray with biomes corresponding to tile layout on board
     \n
     Crown functions:\n
@@ -34,14 +33,18 @@ class kingdom:
         self.biome_types = ['field','forest','mine','ocean','plains','swamp','start']
     
     def showImage(self, pause=True):
-        '''Displays board image'''
+        '''
+        Displays board image
+        '''
         cv2.imshow("board image", self.image)
         if pause == True:
             cv2.waitKey()
             cv2.destroyAllWindows()
     
     def getPoints(self):
-        '''Calculate total points of board'''
+        '''
+        Calculate total points of board
+        '''
         
         # Create 5x5 array with biomes of board
         biome_array = self.biomeArray()
@@ -98,21 +101,25 @@ class kingdom:
         # Return total score
         return total_score
     
-    ###---------------------------- Biome prediction ----------------------------###
-    def biomeImage(self):
-        '''Returns board image with biomes written on tiles'''
-        biome_name_img = kdf.writeBiomeText(self.image)
-        return biome_name_img
     
-    def biomeImageShow(self, pause=True):
-        '''Displays board image with biomes written on tiles'''
-        cv2.imshow("biomeImage", self.biomeImage())
-        if pause == True:
+    ###---------------------------- Biome prediction ----------------------------###
+    def biomeImage(self, show_image=False):
+        '''
+        Returns board image with biomes written on tiles, optional show image
+        '''
+        biome_name_img = kdf.writeBiomeText(self.image)
+        
+        if show_image == True:
+            cv2.imshow("biomeImage", self.biomeImage())
             cv2.waitKey()
             cv2.destroyAllWindows()
+        
+        return biome_name_img
     
     def biomeArray(self):
-        '''Returns 5x5 NDArray with biomes corresponding to tile layout on board'''
+        '''
+        Returns 5x5 NDArray with biomes corresponding to tile layout on board
+        '''
         tiles = self.tile_array
         biome_name_list = []
         
@@ -186,7 +193,6 @@ class kingdom:
         # Returns number of detected crowns
         return len(self.boxes)
     
-    
     def countCrownsTile(self, tile):
         '''
         Counts crowns of given tile and returns amount as an [int]
@@ -197,9 +203,10 @@ class kingdom:
         # Returns number of detected crowns
         return len(boxes)
     
-    
     def crownArray(self):
-        '''Returns 5x5 array with amount of crowns corresponding to each tile on the board'''
+        '''
+        Returns 5x5 array with amount of crowns corresponding to each tile on the board
+        '''
         tiles = self.tile_array
         
         # Create empty np array with same width and height dimensions as tile array 
@@ -215,7 +222,6 @@ class kingdom:
                 crown_np_array[y,x] = crown_num
         
         return crown_np_array
-    
     
     def drawCrowns(self, image, reset_boxes=False):
         '''
@@ -237,6 +243,17 @@ class kingdom:
         
         # Returns image of board with highlighted crowns
         return crown_image
+    
+    
+    ###---------------------------- Image function ----------------------------###
+    def showAnalyzedBoard(self, pause=False):
+        img_biomes = self.biomeImage()
+        img_analyzed = self.drawCrowns(img_biomes)
+        
+        cv2.imshow(f"{self}", img_analyzed)
+        if pause == True:
+            cv2.waitKey()
+            cv2.destroyAllWindows()
     
     
     
