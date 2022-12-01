@@ -187,6 +187,9 @@ def tile_feature_extraction(tile):
         * Hue mean (Key: "Hue mean")\n
         * Hue color ranges (Keys: "Yellow", "Blue", "Green", and "Red")\n
         * Saturation mean (Key: "Saturation")\n
+        * Mean value of R channel in equalized RGB image\n
+        * Mean value of G channel in equalized RGB image\n
+        * Mean value of B channel in equalized RGB image\n
     
         Parameters:
             tile (mat): Tile picture in BGR format
@@ -227,9 +230,6 @@ def tile_feature_extraction(tile):
             # Counts pixels within blue hue range
             if tile_hsv[y,x,0] >= blue_lower and tile_hsv[y,x,0] <= blue_upper:
                 feature_dict["Blue"] += 1
-
-            
-            # Counts pixels within lab
             
 
     # Calculates hue and saturation mean
