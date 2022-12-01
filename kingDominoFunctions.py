@@ -80,12 +80,13 @@ def writeBiomeText(boardImage):
     boardImageArray = segmentImage(boardImage)
     
     #For loop goes through each tile, computes the biome, then writes it on the tile of board image
+    outputImage = np.copy(boardImage)
     for y in range(5):
         for x in range(5):
             biome = determineBiome(boardImageArray[y,x])
             
             #cv2.putText(image, text, postion(x,y), font, fontscale, color, thicc)
-            outputImage = cv2.putText(boardImage, biome, ((squareHeight * x)+10, (squareWidth * y)+10), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0,0,255), 1)
+            outputImage = cv2.putText(outputImage, biome, ((squareHeight * x)+10, (squareWidth * y)+10), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0,0,255), 1)
     
     #returns the original board image with biome text on each tile 
     return outputImage

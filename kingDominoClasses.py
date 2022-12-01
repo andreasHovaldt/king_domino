@@ -223,7 +223,7 @@ class kingdom:
         
         return crown_np_array
     
-    def drawCrowns(self, image, reset_boxes=False):
+    def drawCrowns(self, draw_image, reset_boxes=False):
         '''
         Draws rectangles around all crowns\n
         Returns image with drawn crowns
@@ -237,7 +237,7 @@ class kingdom:
             self.boxes = self.__detectCrown(self.image)
         
         # Draws rectangles on the image corresponding to the crowns
-        crown_image = np.copy(image)
+        crown_image = np.copy(draw_image)
         for(x1,y1,x2,y2) in self.boxes:
             crown_image = cv2.rectangle(np.copy(crown_image), (x1,y1),(x2,y2),(255,0,0),3)
         
@@ -247,6 +247,7 @@ class kingdom:
     
     ###---------------------------- Image function ----------------------------###
     def showAnalyzedBoard(self, pause=False):
+        
         img_biomes = self.biomeImage()
         img_analyzed = self.drawCrowns(img_biomes)
         

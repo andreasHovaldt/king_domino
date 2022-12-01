@@ -6,16 +6,17 @@ from kingDominoClasses import kingdom
 def main():
     
     ### Loading Whole Boards ###
-    img = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/24.jpg")
+    img = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/2.jpg")
 
-    ### Define kingdom object for board 4 ###
+    ### Define kingdom object for board ###
     board = kingdom(img)
     
     ### Get board points
     print(f"Board points: {board.getPoints()}")
     
-    ### Show board 20
+    ### Show board
     board.showAnalyzedBoard(pause=True)
+    
 
 
 
